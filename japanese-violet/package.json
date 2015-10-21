@@ -3,6 +3,10 @@
   "main": "app.js",
   "version": "0.0.1",
   "author": "Agustin Navarro Torres (@SirBargus)",
+  "repository": {
+  "type": "git",
+  "url": "git://github.com/SirBargus/UrlShortener2015.git"
+    },
   "engines": {
      "node": "0.10.x"
    },

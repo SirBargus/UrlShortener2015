@@ -17,9 +17,9 @@ exports.NewURI = function(callback) {
   var query = "INSERT INTO <tablename>
 (<column1 name>, <column2 name>....)
 VALUES (<value1>, <value2>....)"
-  cassandra.execute(query)
+  cassandra.execute(query);
 }
 
 exports.FetchURI = function(callback,shortUri) {
-  cassandra.execute("Select URI from Urls WHERE %s"(shortUri))
+  cassandra.execute("Select URI from Urls WHERE %s"(shortUri));
 }
