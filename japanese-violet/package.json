@@ -1,14 +1,11 @@
 {
-    "name": "URLshortener2015",
-    "main": "app.js",
-    "version": "0.0.0",
-    "author": "Agustin Navarro Torres (@SirBargus)",
-    "dependencies":{
-        "express": "4.13.1",
-        "body-parser": "1.14.1",
-        "alasql": "0.2.0",
-        "crypto": "0.0.3",
-        "valid-url": "1.0.9",
-        "http-status": "0.2.0"
-    }
+  "name": "URLshortener2015",
+  "main": "app.js",
+  "version": "0.0.0",
+  "author": "Agustin Navarro Torres (@SirBargus)",
+  "dependencies": {
+    "body-parser": "1.14.1",
+    "cassandra-driver": "^2.2.2",
+    "express": "4.13.1",
+  }
 }
