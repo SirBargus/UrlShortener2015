@@ -4,15 +4,22 @@
   "version": "0.0.1",
   "author": "Agustin Navarro Torres (@SirBargus)",
   "repository": {
-  "type": "git",
-  "url": "git://github.com/SirBargus/UrlShortener2015.git"
-    },
+    "type": "git",
+    "url": "git://github.com/SirBargus/UrlShortener2015.git"
+  },
   "engines": {
-     "node": "0.10.x"
-   },
-   "dependencies": {
+    "node": "0.10.x"
+  },
+  "dependencies": {
     "body-parser": "1.14.1",
     "cassandra-driver": "^2.2.2",
     "express": "4.13.1"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-concurrent": "^2.0.3",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-nodemon": "^0.4.0"
   }
 }

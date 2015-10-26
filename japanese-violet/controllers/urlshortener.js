@@ -8,14 +8,19 @@ module.exports = function(app){
 
     //Pedir Url
     app.get('/api/v1/URL/:shorturi', function(req, res){
-      shortdb.FetchURI(shorturi);
-      //res.redirect(search[0].target_);
-      res.sendStatus(404);
+    var result =  shortdb.FetchURI(shorturi);
+      if (result == null){
+        res.sendStatus(401);
+      }else {
+        res.redirect(result);
+        //res.redirect(search[0].target_);
+      }
     }),
 
     //Crear URL
     app.post('/api/v1/URL/:uri', function(req, res){
-        shortdb.FetchURI(uri);
+        var result = shortdb.FetchURI(uri);
+        //Gatitos
     })
 
 }
