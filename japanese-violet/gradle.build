@@ -1,10 +1,15 @@
 
-eclipse {
-   project {
-      name = "UrlShortener2015.JapaneseViolet"
-   }
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+
+    dependencies {
+        classpath "com.moowork.gradle:gradle-node-plugin:0.11"
+    }
 }
 
-dependencies {
-   compile project(":common")
-}
+apply plugin: 'com.moowork.node'
