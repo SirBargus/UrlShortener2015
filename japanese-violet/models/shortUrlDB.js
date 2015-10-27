@@ -11,7 +11,7 @@ exports.CreateKeySpace = function(){
 }
 
 exports.CreateTable = function(){
-  var query = "CREATE TABLE shortUrl(id int PRIMARYKEY, short-url text, complete-url text"s; //Tabla URLS
+  var query = "CREATE TABLE shortUrl(id int PRIMARYKEY, short-url text, complete-url text"; //Tabla URLS
   cassandra.execute(query,[],function(err,result){
     if (err){
       return null;
