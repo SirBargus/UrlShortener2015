@@ -1,8 +1,9 @@
 
 var cassandra = require('cassandra-driver');
 var async = require('async');
+var config = require('../config/conf');
 
-var client = new cassandra.Client({contactPoints: ['127.0.0.1'], keyspace: 'urlshortener'});
+var client = new cassandra.Client({contactPoints: [conf.database.url], keyspace: 'urlshortener'});
 
 exports.CreateKeySpace = function(){
   var query = "CREATE KEYSPACE urlshortener WITH REPLICATION - {'class' : 'SimpleStrategy', 'replication_factor' : 3};";
