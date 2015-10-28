@@ -1,7 +1,7 @@
 
 var cassandra = require('cassandra-driver');
 var async = require('async');
-var config = require('../config/conf');
+var conf = require('../config/conf');
 
 var client = new cassandra.Client({contactPoints: [conf.database.url], keyspace: 'urlshortener'});
 
