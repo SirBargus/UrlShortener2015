@@ -1,6 +1,7 @@
 {
     "port": "8080",
-    "database":{
-        "url": "cassandra"
+    "log": false,
+    "ddbb":{
+        "url": "mongo/iweb"
     }
 }

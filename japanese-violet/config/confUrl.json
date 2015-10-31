@@ -1,0 +1,6 @@
+{
+    "base":{
+        "up": "/up",
+        "createUri": "/createUri"
+    }
+}
