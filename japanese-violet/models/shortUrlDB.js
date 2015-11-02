@@ -28,5 +28,10 @@ module.exports = {
         uri.remove({"urlShort": urlShort}, function(err){
             callback(err);
         });
+    },
+    find: function(urlShort, callback){
+        uri.findOne({"urlShort": urlShort}, function(err, res){
+            callback(err, res);
+        });
     }
 };

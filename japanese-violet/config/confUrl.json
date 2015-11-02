@@ -1,6 +1,10 @@
 {
     "base":{
         "up": "/up",
-        "createUri": "/createUri"
+        "createUri": "/createUri",
+        "getUri": {
+            "url": "/getUrl/",
+            "value": "shortUrl"
+        }
     }
 }

@@ -1,5 +1,6 @@
 {
     "port": "8080",
+    "ip": "localhost",
     "log": false,
     "ddbb":{
         "url": "mongo/iweb"
