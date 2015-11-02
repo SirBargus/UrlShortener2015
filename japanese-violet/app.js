@@ -13,8 +13,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true })); 
 
 //Configure routes/controllers
-require('./controllers/urlshortener')(app)
+require('./controllers/route')(app)
 
 //Init server
-app.listen(config.port);
-console.log("Magic happens on port: " + config.port);
+app.listen(config.port, function(){
+//    console.log("Magic happens on port: " + config.port);
+});
+module.exports = app;

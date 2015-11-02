@@ -1,45 +1,37 @@
+//users.js
 
-var cassandra = require('cassandra-driver');
-var async = require('async');
-var conf = require('../config/conf');
+//Modelo de la BBDD para la tabla de usuarios
+var mongoose = require('mongoose'),
+    conf = require('../config/conf');
 
-var client = new cassandra.Client({contactPoints: [conf.database.url], keyspace: 'urlshortener'});
+//Conexion con el servidor
+var db = mongoose.connection;
 
-exports.CreateKeySpace = function(){
-  var query = "CREATE KEYSPACE urlshortener WITH REPLICATION - {'class' : 'SimpleStrategy', 'replication_factor' : 3};";
-  cassandra.execute(query);
-}
+db.on('error', console.error);
+//Modelo de la base de datos
+var uriSchema = new mongoose.Schema({
+    urlShort: {type: String, require: true, unique: true},
+    urlSource: {type: String, require: true}
+});
+var uri = mongoose.model('uri', uriSchema);
 
-exports.CreateTable = function(){
-  var query = "CREATE TABLE shortUrl(id int PRIMARYKEY, short-url text, complete-url text"; //Tabla URLS
-  cassandra.execute(query,[],function(err,result){
-    if (err){
-      return null;
-    }else{
-      return result;
+mongoose.connect('mongodb://' + conf.ddbb.url);
+//Funciones de la BBDD
+module.exports = {
+    add: function(add, callback){
+        var newUri = new uri(add);
+        newUri.save(function(err){
+            callback(err);
+        });
+    },
+    remove: function(urlShort, callback){
+        uri.remove({"urlShort": urlShort}, function(err){
+            callback(err);
+        });
+    },
+    find: function(urlShort, callback){
+        uri.findOne({"urlShort": urlShort}, function(err, res){
+            callback(err, res);
+        });
     }
-  });
-}
-
-exports.NewURI = function(idUri,shortUri,longUri) {
-  var query = "INSERT INTO shortUrl (id, short-url, complete-url) VALUES (?,?,?)"
-  cassandra.execute(query,[idUri,shortUri,longUri],function(err,result){
-    if (err){
-      return null;
-    }else{
-      return result;
-    }
-  });
-}
-
-
-exports.FetchURI = function(shortUri) {
-  var query ="Select complete-url from shortUrl WHERE short-url = ?";
-  cassandra.execute(query,[shortUri],function(err,result){
-    if (err){
-      return null;
-    }else{
-      return result;
-    }
-  });
-}
+};
