@@ -2,7 +2,6 @@ var conf = require('../config/conf'),
     request = require('supertest'),
     express = require('express'),
     app = require('../app'),
-    confUrl = require('../config/confUrl'),
     ddbb = require('../models/shortUrlDB.js'),
     crypto = require('crypto'),
     should = require('should');
@@ -14,20 +13,20 @@ describe('#Base test', function(){
     //Is alive
     it('Is server alive?', function(done){
         request(app)
-            .get(confUrl.base.up)
+            .get(conf.api.up)
             .expect(200, done);
     }),
     //Create a new short url
     it('Create short uri', function(done){
         request(app)
-            .post(confUrl.base.createUri)
+            .post(conf.api.createUri)
             .send({"urlsource": urlTest})
             .expect(200, done);
     }),
     it('Get short uri', function(done){
         request(app)
-            .get(confUrl.base.getUri.url + urlShort)
-            .expect(302)
+            .get(conf.api.getUri + "/" + urlShort)
+            .expect(302, done)
             .end(function(err, res){
                 if (err) throw err;
                 res.header['location'].should.equal(urlTest);

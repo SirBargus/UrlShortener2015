@@ -1,7 +1,0 @@
-{
-    "base":{
-        "up": "/api/v1/up",
-        "createUri": "/api/v1/URL",
-        "getUri": "/api/v1/URL"
-    }
-}
