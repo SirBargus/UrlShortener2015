@@ -17,6 +17,7 @@ var uri = mongoose.model('uri', uriSchema);
 
 mongoose.connect('mongodb://' + conf.ddbb.url);
 //Funciones de la BBDD
+//Si hay problemas de rendimiento, exportar funcion a funcion
 module.exports = {
     add: function(add, callback){
         var newUri = new uri(add);

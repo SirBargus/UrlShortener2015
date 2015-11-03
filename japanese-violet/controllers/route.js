@@ -13,7 +13,7 @@ module.exports = function(app){
     })
 
     //getUrl
-    app.get(confUrl.base.getUri.url + ":" + confUrl.base.getUri.value, function(req, res){
+    app.get(confUrl.base.getUri.url + "/:shortUrl, function(req, res){
         if (config.log == true) console.log("Input Conex: " + req);
         //req.param is deprecated, cant use string to access information
         base.getUrl(req.params.shortUrl, function(err, result){
