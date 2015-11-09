@@ -10,10 +10,19 @@ var db = mongoose.connection;
 db.on('error', console.error);
 //Modelo de la base de datos
 var uriSchema = new mongoose.Schema({
-    urlShort: {type: String, require: true, unique: true},
-    urlSource: {type: String, require: true}
+    urlShort:   {type: String, require: true, unique: true},
+    urlSource:  {type: String, require: true}
 });
+var userSchema = new mongoose.Schema({
+    username:   {type: String, require: true, unique: true},
+    password:   {type: String, require: true },
+    email:      {type: String, require: true },
+    uris:       {type: String, repeat: true }
+
+});
+
 var uri = mongoose.model('uri', uriSchema);
+var user = mongoose.model('user',userSchema);
 
 mongoose.connect('mongodb://' + conf.ddbb.url);
 //Funciones de la BBDD
