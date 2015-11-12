@@ -11,7 +11,8 @@ db.on('error', console.error);
 //Modelo de la base de datos
 var uriSchema = new mongoose.Schema({
     urlShort: {type: String, require: true, unique: true},
-    urlSource: {type: String, require: true}
+    urlSource: {type: String, require: true},
+    qr: Buffer
 });
 var uri = mongoose.model('uri', uriSchema);
 
