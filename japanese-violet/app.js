@@ -7,8 +7,8 @@ var app = require('express')(),
     fs = require('fs');
 
 //Config express
-app.use(bodyParser.json()); 
-app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 //Controller
 require('./controllers/base.js')(app);

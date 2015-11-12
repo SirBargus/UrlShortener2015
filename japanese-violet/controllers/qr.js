@@ -8,32 +8,34 @@ var ddbbUri = require('../models/shortUrlDB.js'),
 
 module.exports = function(app){
 
-    //postUrl
-    app.post(conf.api.creqteQr, function(req, res){
+    //Create a QR
+    app.put(conf.api.qr, function(req, res){
         if (conf.log == true) console.log("Input Conex: " + req);
+        if (req.body.urlsource == undefined) {
+            res.sendStatus(400);
+            return 0;
+        }
         var urlShort = crypto.createHash('md5').update(req.body.urlsource).digest('hex');
         var json = {"urlShort": urlShort, "urlSource": req.body.urlsource};
-        var urlShortComplete = "http://" + conf.ip + "/" + urlShort;
-        console.log("ASDFADFADFADFADFAFD");
+        var urlShortComplete = "http://" + conf.ip + ":" + conf.port + "/" + urlShort;
 
         //Get QR image
-        http.get(conf.extern.qr + urlShortComplete, function(res){
-           if (res.statusCode == 200){
+        http.get(conf.extern.qr + urlShortComplete, function(response){
+           if (response.statusCode == 200){
                var img = '';
-               res.setEncoding('binary');
+               response.setEncoding('binary');
                //Get the image
-               res.on('data', function(chunk){
+               response.on('data', function(chunk){
                    img += chunk;
                });
                //Finish img
-               res.on('end', function(){
+               response.on('end', function(){
                    json.qr = img;
                    ddbbUri.add(json);
-                   console.log(json);
                    res.send(json);
                });
            } else res.sendStatus(400);
-           
+
         }).on('error', function(e){
             if (conf.log == true) console.error("Got error: " + e.message);
         });

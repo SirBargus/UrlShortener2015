@@ -19,13 +19,13 @@ describe('#Base test', function(){
     //Create a new short url
     it('Create short uri', function(done){
         request(app)
-            .post(conf.api.createUri)
+            .post(conf.api.uri)
             .send({"urlsource": urlTest})
             .expect(200, done);
     }),
     it('Get short uri', function(done){
         request(app)
-            .get(conf.api.getUri + "/" + urlShort)
+            .get(conf.api.uri + "/" + urlShort)
             .expect(302, done)
             .end(function(err, res){
                 if (err) throw err;
@@ -41,4 +41,3 @@ describe('#Base test', function(){
         });
     })
 });
-
