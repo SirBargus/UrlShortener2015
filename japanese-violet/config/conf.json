@@ -9,9 +9,11 @@
         "up": "/api/v1/up",
         "uri": "/api/v1/url",
         "cool": "/cool",
-        "qr": "/api/v1/qr"
+        "qr": "/api/v1/qr",
+        "vcard": "/api/v1/vcard"
     },
     "extern":{
-        "qr": "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl="
+        "qr": "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=",
+        "qrErr": "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chld="
     }
 }
