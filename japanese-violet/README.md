@@ -31,3 +31,20 @@ $> npm test
 ```
 $> docker-compose run server npm test
 ```
+
+##Canvas
+
+### Installing dependencies
+
+    $ sudo apt-get update 
+    $ sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+
+Important: ``libjpeg8-dev`` is required rather than just ``libjpeg-dev``
+
+### Installing node-canvas
+
+    $ sudo npm install canvas
+
+or from source:
+
+    $ npm install canvas
