@@ -32,6 +32,9 @@ $> npm test
 $> docker-compose run server npm test
 ```
 
+#Install Process
+
+
 ##Canvas
 
 ### Installing dependencies
