@@ -5,6 +5,6 @@ server:
     volumes:
         - .:/code
     links:
-        - mongo 
+        - mongo
 mongo:
-    image: mongo 
+    image: mongo

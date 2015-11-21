@@ -1,11 +1,10 @@
 //route.js
 var ddbbUri = require('../models/shortUrlDB.js'),
     conf = require('../config/conf'),
-    crypto = require('crypto'),
+    shortid = require('shortid'),
     cool = require('cool-ascii-faces');
 
 // File with only server's methods
-
 module.exports = function(app){
 
     //A simple method to test if server is alive
@@ -25,12 +24,17 @@ module.exports = function(app){
     //postUrl
     app.post(conf.api.uri, function(req, res){
         if (conf.log == true) console.log("Input Conex: " + req);
-        var urlShort = crypto.createHash('md5').update(req.body.urlsource).digest('hex');
-        var json = {"urlShort": urlShort, "urlSource": req.body.urlsource};
+        var shortUrl_ = shortid.generate();
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
         ddbbUri.add(json, function(err, result){
             if (err != null && conf.log == true) console.error("Error: " + err);
-            if (err == null) res.send({"urlShort": "http://" + conf.ip + ":" + conf.port + "/" + urlShort,
-                "urlSource": req.body.urlsource});
+            if (err == null && result != {}){
+                res.send({
+                    "urlShort": "http://" + conf.ip + ":" + conf.port +
+                        conf.api.uri + "/" + shortUrl_,
+                    "urlSource": req.body.urlsource
+                });
+            }
             else res.sendStatus(400);
         });
     }),

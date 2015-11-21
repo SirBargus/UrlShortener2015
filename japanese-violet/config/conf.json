@@ -3,14 +3,16 @@
     "ip": "localhost",
     "log": false,
     "ddbb":{
-        "url": "mongo/iweb"
+        "url": "mongodb://iweb:iweb@ds057204.mongolab.com:57204/iweb"
     },
     "api":{
         "up": "/api/v1/up",
         "uri": "/api/v1/url",
         "cool": "/cool",
         "qr": "/api/v1/qr",
-        "vcard": "/api/v1/vcard"
+        "qrlocal": "/api/v1/qrlocal",
+        "vcard": "/api/v1/vcard",
+        "vcardlocal": "/api/v1/vcardlocal"
     },
     "extern":{
         "qr": "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=",

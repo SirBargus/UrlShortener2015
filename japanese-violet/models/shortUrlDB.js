@@ -10,8 +10,8 @@ var db = mongoose.connection;
 db.on('error', console.error);
 //Modelo de la base de datos
 var uriSchema = new mongoose.Schema({
-    urlShort: {type: String, require: true, unique: true},
     urlSource: {type: String, require: true},
+    urlShort: {type: String, require: true, unique: true},
     qr: Buffer
 });
 var uri = mongoose.model('uri', uriSchema);
@@ -25,7 +25,7 @@ module.exports = {
     add: function(add, callback){
         var newUri = new uri(add);
         newUri.save(function(err){
-            callback(err);
+            callback(err, newUri);
         });
     },
     remove: function(urlShort, callback){
