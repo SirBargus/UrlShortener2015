@@ -90,3 +90,11 @@ Important: ``libjpeg8-dev`` is required rather than just ``libjpeg-dev``
 or from source:
 
     $ npm install canvas
+    
+##MongoDB
+
+Separated online node, install over dockers
+
+    $ sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10
+    
+    
