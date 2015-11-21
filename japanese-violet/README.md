@@ -34,7 +34,6 @@ $ docker-compose run server npm test
 
 #Install Process
 
-
 ##Docker
 
 Verify that you have wget installed, and get it if isn't installed 
