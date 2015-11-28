@@ -10,9 +10,13 @@ Tecnologias
 
 # Run server
 ## NPM
-```
+
 $ npm start
-```
+
+Or auto-reload server changes version:
+
+$ nodemon app.js
+
 ## Docker-compose
 You need Linux or OS X
 
@@ -67,6 +71,10 @@ try docker
 To compile and install native addons from npm you may also need to install build tools:
     
     $ sudo apt-get install -y build-essential    
+    
+If you want to use a node daemon, which auto-updates the changes in the server, install nodemon:
+    
+    $ sudo npm install -g nodemon
 
 ##Canvas
 
