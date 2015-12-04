@@ -10,9 +10,16 @@ var db = mongoose.connection;
 db.on('error', console.error);
 //Modelo de la base de datos
 var uriSchema = new mongoose.Schema({
-    urlSource: {type: String, require: true},
-    urlShort: {type: String, require: true, unique: true},
-    qr: Buffer
+    urlSource:  {type: String, require: true},
+    urlShort:   {type: String, require: true, unique: true},
+    qr: Buffer,
+    analitycs:{
+        created:{type: String},
+        mode:   {type: Number},
+        safe:   {type: Boolean},
+        ip:     {type: String},
+        country:{type: String},
+    }
 });
 var userSchema = new mongoose.Schema({
     username:   {type: String, require: true, unique: true},
