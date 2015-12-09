@@ -25,7 +25,12 @@ module.exports = function(app){
     app.post(conf.api.uri, function(req, res){
         if (conf.log == true) console.log("Input Conex: " + req);
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        //Comprueba el usuario
+        if(req.body.user == '') res.sendStatus(400);
+
+        //Crea el la url
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_,
+            "user": req.body.user, "pass": req.body.pass};
         ddbbUri.add(json, function(err, result){
             if (err != null && conf.log == true) console.error("Error: " + err);
             if (err == null && result != {}){

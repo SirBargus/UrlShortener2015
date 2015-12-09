@@ -26,6 +26,8 @@ module.exports = function(app){
             res.sendStatus(400);
             return 0;
         }
+        //Comprueba el usuario
+        if(req.body.user == '') res.sendStatus(400);
 
         //Level of error
         if (req.body.err == true) ext = conf.exter.qrErr + req.body.errLevel + "&chl=";
@@ -33,7 +35,8 @@ module.exports = function(app){
 
         var shortUrl_ = shortid.generate();
         var urlShortComplete = "htt://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_,
+            "user": req.body.user, "pass": req.body.pass};
         //Get QR imagec
         getQr(ext + urlShortComplete, json, res);
     }),
@@ -61,13 +64,16 @@ module.exports = function(app){
             res.sendStatus(400);
             return 0;
         }
+        //Comprueba el usuario
+        if(req.body.user == '') res.sendStatus(400);
 
         //Level of error
         if (req.body.err == true) ext = conf.exter.qrErr + req.body.errLevel + "&chl=";
         else ext = conf.extern.qr;
 
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_,
+             "user": req.body.user, "pass": req.body.pass};
         var urlShortComplete = "htt://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
 
         var vcard = createVcard(req, urlShortComplete);
@@ -100,9 +106,12 @@ module.exports = function(app){
             res.sendStatus(400);
             return 0;
         }
+        //Comprueba el usuario
+        if(req.body.user == '') res.sendStatus(400);
 
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_,
+            "user": req.body.user, "pass": req.body.pass};
         var urlShortComplete = "htt://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
 
         createQrLocal(urlShortComplete, json, req, res);
@@ -130,9 +139,12 @@ module.exports = function(app){
             res.sendStatus(400);
             return 0;
         }
+        //Comprueba el usuario
+        if(req.body.user == '') res.sendStatus(400);
 
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_,
+            "user": req.body.user, "pass": req.body.pass};
         var urlShortComplete = "htt://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
 
         var vcard = createVcard(req, urlShortComplete);
@@ -153,6 +165,7 @@ function getQr(url, json, res){
            response.on('end', function(){
                json.qr = img;
                ddbbUri.add(json, function(err, result){
+                   delete json.pass;
                    json.urlShort = "htt://" + conf.ip + ":" + conf.port
                         + conf.api.uri + "/" + json.urlShort;
                    if (err || result == {}) res.sendStatus(400);
@@ -206,6 +219,7 @@ function createQrLocal(add, json, req, res){
         else {
             ddbbUri.add(json, function(err, result){
                 json.qr = buf;
+                delete json.pass;
                 json.urlShort = "htt://" + conf.ip + ":" + conf.port
                      + conf.api.uri + "/" + json.urlShort;
                 if (err || result == {}) res.sendStatus(400);

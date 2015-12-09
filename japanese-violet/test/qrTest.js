@@ -13,15 +13,21 @@ var urlTest = "http://www.nyan.cat";
 var json = '';
 var jsonVcard = {"firstName": "dummy","middleName": "dummy","lastName": "dummy",
     "organization": "dummy","photo": "https://pbs.twimg.com/profile_images/1620149654/avatar.jpg",
-    "workPhone": "123","birthday":new Date("14-03-1994"),"title":"dummy","urlsource":urlTest};
+    "workPhone": "123","birthday":new Date("14-03-1994"),"title":"dummy","urlsource":urlTest, "user": "dummy", "pass": "dummy"};
 var idDelete = [];
 //Base test
 describe('#QR test', function(){
+    before(function(done){
+        ddbb.addUser({"username": "dummy", "password": "dummy", "rol": "USUARIO"}, function(err, result){
+            if(err) throw err;
+            else done();
+        });
+    }),
     //Get QR
     it('Get Qr', function(done){
         request(app)
             .put(conf.api.qr)
-            .send({"urlsource": urlTest, "qrErr": true })
+            .send({"urlsource": urlTest, "qrErr": true, "user": "dummy", "pass": "dummy"})
             .expect(200)
             .end(function(err, res){
                 json = res.body;
@@ -65,7 +71,7 @@ describe('#QR test', function(){
         json = '';
         request(app)
             .put(conf.api.qr)
-            .send({"urlsource": urlTest, "qrErr": true, "errLevel": "H" })
+            .send({"urlsource": urlTest, "qrErr": true, "errLevel": "H", "user": "dummy", "pass": "dummy"})
             .expect(200)
             .end(function(err, res){
                 json = res.body;
@@ -122,7 +128,7 @@ describe('#QR test', function(){
     it('Get QrLocal', function(done){
         var img = fs.readFileSync('./test/img/logo.png');
         var jsonlocal = {"urlsource": urlTest, "color":{"r": 137, "g": 127, "b": 38 },
-            "logo": img};
+            "logo": img, "user": "dummy", "pass": "dummy"};
         request(app)
             .put(conf.api.qrlocal)
             .send(jsonlocal)
@@ -207,6 +213,10 @@ describe('#QR test', function(){
                 if(err) console.error("Error delete: " + err);
             });
         }
-        done();
+        //Remove user
+        ddbb.removeUser({"username": "dummy", "password": "dummy"}, function(err){
+            if(err) console.error("Error delete: " + err);
+            else done();
+        });
     })
 });

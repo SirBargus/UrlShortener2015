@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //Controller
 require('./controllers/base.js')(app);
 require('./controllers/qr.js')(app);
+require('./controllers/users.js')(app);
 
 var http = require('http').Server(app),
     io = require('socket.io')(http);

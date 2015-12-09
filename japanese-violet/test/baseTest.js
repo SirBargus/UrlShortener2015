@@ -10,6 +10,13 @@ var urlTest = "http://google.es";
 var json = "";
 //Base test
 describe('#Base test', function(){
+    //Creamos el usuario
+    before(function(done){
+        ddbb.addUser({"username": "dummy", "password": "dummy", "rol": "USUARIO"}, function(err, result){
+            if(err) throw err;
+            else done();
+        });
+    }),
     //Is alive
     it('Is server alive?', function(done){
         request(app)
@@ -21,7 +28,7 @@ describe('#Base test', function(){
         this.timeout(30000);
         request(app)
             .post(conf.api.uri)
-            .send({"urlsource": urlTest})
+            .send({"urlsource": urlTest, "user": "dummy", "pass": "dummy"})
             .expect(200)
             .end(function(err,res){
                 if (err) throw err;
@@ -49,6 +56,10 @@ describe('#Base test', function(){
         var id = json.urlShort.substring("http://".length + conf.ip.length +
             conf.port.length + conf.api.uri.length + 2, json.urlShort.length);
         ddbb.remove(id, function(err){
+            if(err) console.error("Error delete: " + err);
+        });
+        //Remove user
+        ddbb.removeUser({"username": "dummy", "password": "dummy"}, function(err){
             if(err) console.error("Error delete: " + err);
             else done();
         });
