@@ -21,6 +21,17 @@ module.exports = function(app){
             else res.sendStatus(401);
         });
     }),
+    //getUrlByUsers
+    app.get(conf.api.uriUser + "/:user", function(req, res){
+        if (conf.log == true) console.log("Input Conex: " + req);
+        ddbbUri.findByUser(req.params.user, function(err, result){
+            if (err != null && con.log == true) console.error("Error: " + err);
+            if (err == null && result != []){
+                res.send(result);
+            }
+            else res.sendStatus(401);
+        });
+    }),
     //postUrl
     app.post(conf.api.uri, function(req, res){
         if (conf.log == true) console.log("Input Conex: " + req);

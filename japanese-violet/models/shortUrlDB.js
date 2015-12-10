@@ -13,7 +13,7 @@ var uriSchema = new mongoose.Schema({
     urlSource:  {type: String, require: true},
     urlShort:   {type: String, require: true, unique: true},
     qr: Buffer,
-    user: String,
+    user: {type: String, require: true},
     analitycs:{
         created:{type: String},
         mode:   {type: Number},
@@ -54,6 +54,11 @@ module.exports = {
     },
     find: function(urlShort, callback){
         uri.findOne({"urlShort": urlShort}, function(err, res){
+            callback(err, res);
+        });
+    },
+    findByUser: function(users, callback){
+        uri.find({"user": users}, function(err, res){
             callback(err, res);
         });
     },
