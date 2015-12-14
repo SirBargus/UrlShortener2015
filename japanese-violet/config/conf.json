@@ -3,7 +3,7 @@
     "ip": "localhost",
     "log": false,
     "ddbb":{
-        "url": "mongodb://iweb:iweb@ds057204.mongolab.com:57204/iweb"
+            "url":"mongodb://localhost:27017/iweb"
     },
     "api":{
         "up": "/api/v1/up",

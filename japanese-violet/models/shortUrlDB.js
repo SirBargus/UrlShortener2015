@@ -14,12 +14,16 @@ var uriSchema = new mongoose.Schema({
     urlShort:   {type: String, require: true, unique: true},
     qr: Buffer,
     user: {type: String, require: true},
-    analitycs:{
+    statistics:{
+        click:{
+            count:  {type: Number},
+            date:   {type: String},
+            browser:{type: String},
+            ip:     {type: String},
+        },
         created:{type: String},
-        mode:   {type: Number},
-        safe:   {type: Boolean},
+        browser:{type: String},
         ip:     {type: String},
-        country:{type: String},
     }
 });
 var userSchema = new mongoose.Schema({
@@ -37,6 +41,9 @@ mongoose.connect('mongodb://' + conf.ddbb.url, function(err){
 //Funciones de la BBDD
 //Si hay problemas de rendimiento, exportar funcion a funcion
 module.exports = {
+    /****   URI SCHEMA  ****/
+    //Crea URI
+    /** Eliminar error de  pass **/
     add: function(add, callback){
         user.findOne({"username": add.user, "password": add.pass},
                 function(err, result){
@@ -47,32 +54,47 @@ module.exports = {
             });
         })
     },
+    //Borra URI
     remove: function(urlShort, callback){
         uri.remove({"urlShort": urlShort}, function(err){
             callback(err);
         });
     },
+    //Busca por URI
     find: function(urlShort, callback){
         uri.findOne({"urlShort": urlShort}, function(err, res){
             callback(err, res);
         });
     },
+    //Busca por usuario
     findByUser: function(users, callback){
         uri.find({"user": users}, function(err, res){
             callback(err, res);
         });
     },
+    //Incrementa en uno el nº de clicks
+    /***  añadir ip y navegador   ***/
+    increase: function(click,callback){
+        uri.findOneAndUpdate({"urlShort": click.urlShort},{$inc:{statistics:{click:{count: 1}}}} ,function(err, res){
+            callback(err, res);
+        });
+    },
+
+    /****  USER SCHEMA  ****/
+    //Añadir usuario
     addUser : function(add, callback){
         var newUser = new user(add);
         newUser.save(function(err){
             callback(err, newUser);
         });
     },
+    //Eliminar usuario
     removeUser: function(user_, callback){
         user.remove({"username": user_.username, "password": user_.password}, function(err){
             callback(err);
         });
     },
+    //Buscar  usuario
     findUser: function(user_, callback){
         user.findOne({"username": user_.username, "password": user_.password}, function(err, res){
             callback(err, res);
