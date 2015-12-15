@@ -23,6 +23,9 @@ var http = require('http').Server(app),
 app.use(express.static(__dirname + '/public'));
 //Init server
 http.listen(config.port, function(){
-console.log("Magic happens on port: " + config.port);
+    var date = new Date();
+    console.log(date);
+    date.getMinutes();
+    console.log("Magic happens on port: " + config.port);
 });
 module.exports = http;

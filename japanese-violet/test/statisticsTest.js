@@ -17,8 +17,8 @@ describe('#Statistics Test', function(){
         ddbb.add({"user": "dummy", "urlSource": "1", "urlShort": "2", "statistics.click.count":0}, function(err, res){
             if (err) throw err;
         });
-        ddbb.add({"user": "dummy", "urlSource": "3", "urlShort": "4",
-
+        ddbb.add({"user": "dummy", "urlSource": "3", "urlShort": "4", "statistics.created":"Tue Dec 15 2015 03:04:05 GMT+0100 (CET)"}, function (err,res){
+            if (err) throw err;
         });
     }),
 
@@ -33,7 +33,26 @@ describe('#Statistics Test', function(){
             });
     }),
 
+    it('Check that the date is older and well formatted', function(done){
+       this.timmeout(30000);
+        request(app)
+            .get(conf.api.uriUser + "/dummy")
+            .expect(200)
+            .end(function(err,res){
+                if(err) throw err;
+                var date = new Date();
+                if(res.body.statistics.created.getTime()<date.getTime) done();
+            });
+    }),
+
     after(function(done){
+
+        ddbb.remove("2", function(err){
+            if(err) console.error("Error delete: " + err);
+        });
+        ddbb.remove("4", function(err){
+            if(err) console.error("Error delete: " + err);
+        });
         ddbb.removeUser({"username": "dummy", "password": "dummy"}, function(err){
             if(err) console.error("Error delete: " + err);
             else done();
