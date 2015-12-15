@@ -19,6 +19,7 @@ describe('#Statistics Test', function(){
         });
         ddbb.add({"user": "dummy", "urlSource": "3", "urlShort": "4", "statistics.created":"Tue Dec 15 2015 03:04:05 GMT+0100 (CET)"}, function (err,res){
             if (err) throw err;
+            else done();
         });
     }),
 
