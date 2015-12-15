@@ -8,7 +8,7 @@ var conf = require('../config/conf'),
 var urlTest = "http://google.es";
 var json = "";
 //Base test
-describe('#User Test', function(){
+describe('#Statistics Test', function(){
     before(function(done){
         ddbb.addUser({"username": "dummy", "password": "dummy", "rol":"USUARIO"},
             function(err, result){
@@ -16,6 +16,9 @@ describe('#User Test', function(){
             });
         ddbb.add({"user": "dummy", "urlSource": "1", "urlShort": "2", "statistics.click.count":0}, function(err, res){
             if (err) throw err;
+        });
+        ddbb.add({"user": "dummy", "urlSource": "3", "urlShort": "4",
+
         });
     }),
 

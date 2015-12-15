@@ -16,7 +16,7 @@ var uriSchema = new mongoose.Schema({
     user: {type: String, require: true},
     statistics:{
         click:{
-            count:  {type: Number},
+            count:  {type: Number, default:0},
             date:   {type: String},
             browser:{type: String},
             ip:     {type: String},
