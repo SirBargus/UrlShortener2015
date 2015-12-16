@@ -30,6 +30,7 @@ describe('#Statistics Test', function(){
             .expect(200)
             .end(function(err,res){
                 if(err) throw err;
+                console.log(res.body);
                 if((res.body.statistics.click.count == 1)) done();
             });
     }),

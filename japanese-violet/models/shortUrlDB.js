@@ -17,11 +17,11 @@ var uriSchema = new mongoose.Schema({
     statistics:{
         click:{
             count:  {type: Number, default:0},
-            date:   {type: String},
+            date:   {type: String, default:"0"},
             browser:{type: String},
             ip:     {type: String},
         },
-        created:{type: String},
+        created:{type: String, default:"0"},
         browser:{type: String},
         ip:     {type: String},
     }
