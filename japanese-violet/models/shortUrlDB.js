@@ -27,9 +27,11 @@ var uriSchema = new mongoose.Schema({
     }
 });
 var userSchema = new mongoose.Schema({
-    username:   {type: String, require: true, unique: true},
-    password:   {type: String, require: true },
-    rol: {type: String, require: true}
+    local: {
+        username: {type: String, unique: true},
+        password: String,
+        rol: String
+    }
 });
 
 var uri = mongoose.model('uri', uriSchema);

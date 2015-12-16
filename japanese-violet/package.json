@@ -22,7 +22,14 @@
     "socket.io": "1.3.*",
     "urlencode": "1.1.0",
     "vcardparser": "1.0.3",
-    "vcards-js": "2.3.0"
+    "vcards-js": "2.3.0",
+    "passport" : "0.3.2",
+    "passport-local" : "1.0.0",
+    "passport-facebook" : "2.0.0",
+    "passport-twitter" : "1.0.3",
+    "passport-google-oauth" : "0.2.0",
+    "cookie-parser": "1.4.0",
+    "express-session": "1.12.1"
   },
   "devDependencies": {
     "chai": "3.3.0",
