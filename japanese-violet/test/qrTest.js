@@ -143,6 +143,7 @@ describe('#QR test', function(){
             });
     }),
     it('Qr local is correct', function(done){
+        this.timeout(30000);
         if (json != undefined){
             //Transform the json.qr to buffer
             var img = new Buffer(json.qr);

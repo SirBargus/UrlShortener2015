@@ -19,11 +19,11 @@ var uriSchema = new mongoose.Schema({
             count:  {type: Number, default:0},
             date:   {type: String, default:"0"},
             browser:{type: String},
-            ip:     {type: String},
+            ip:     {type: String}
         },
         created:{type: String, default:"0"},
         browser:{type: String},
-        ip:     {type: String},
+        ip:     {type: String}
     }
 });
 var userSchema = new mongoose.Schema({
@@ -75,7 +75,9 @@ module.exports = {
     //Incrementa en uno el nº de clicks
     /***  añadir ip y navegador   ***/
     increase: function(click,callback){
-        uri.findOneAndUpdate({"urlShort": click.urlShort},{$inc:{statistics:{click:{count: 1}}}} ,function(err, res){
+        uri.findOne({"urlShort": click.urlShort},function(err, res){
+            res.statistics.click.count = res.statistics.click.count + 1;
+            res.statistics.save();
             callback(err, res);
         });
     },
