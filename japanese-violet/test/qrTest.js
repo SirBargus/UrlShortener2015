@@ -11,23 +11,18 @@ var conf = require('../config/conf'),
 
 var urlTest = "http://www.nyan.cat";
 var json = '';
-var jsonVcard = {"firstName": "dummy","middleName": "dummy","lastName": "dummy",
+var jsonVcard = {"vcard": {"firstName": "dummy","middleName": "dummy","lastName": "dummy",
     "organization": "dummy","photo": "https://pbs.twimg.com/profile_images/1620149654/avatar.jpg",
-    "workPhone": "123","birthday":new Date("14-03-1994"),"title":"dummy","urlsource":urlTest, "user": "dummy", "pass": "dummy"};
+    "workPhone": "123", "birthday":new Date("14-03-1994"), "title":"dummy"},
+    "urlsource": urlTest};
 var idDelete = [];
 //Base test
 describe('#QR test', function(){
-    before(function(done){
-        ddbb.addUser({"username": "dummy", "password": "dummy", "rol": "USUARIO"}, function(err, result){
-            if(err) throw err;
-            else done();
-        });
-    }),
     //Get QR
     it('Get Qr', function(done){
         request(app)
-            .put(conf.api.qr)
-            .send({"urlsource": urlTest, "qrErr": true, "user": "dummy", "pass": "dummy"})
+            .put(conf.api.uri)
+            .send({"urlsource": urlTest})
             .expect(200)
             .end(function(err, res){
                 json = res.body;
@@ -59,19 +54,19 @@ describe('#QR test', function(){
         var id = json.urlShort.substring("http://".length + conf.ip.length +
             conf.port.length + conf.api.uri.length + 1, json.urlShort.length);
         request(app)
-            .get(conf.api.uri + '/' + id)
+            .get(conf.api.uri + id)
             .expect(302)
             .end(function(err, res){
                 if(err) throw err;
                 res.header['location'].should.equal(urlTest);
                 done();
             });
-    }),
+    })
     it('Get Qr with error_correction_level', function(done){
         json = '';
         request(app)
-            .put(conf.api.qr)
-            .send({"urlsource": urlTest, "qrErr": true, "errLevel": "H", "user": "dummy", "pass": "dummy"})
+            .put(conf.api.uri)
+            .send({"urlsource": urlTest, "qrErr": true, "errLevel": "H"})
             .expect(200)
             .end(function(err, res){
                 json = res.body;
@@ -80,14 +75,10 @@ describe('#QR test', function(){
                     conf.port.length + conf.api.uri.length + 1, json.urlShort.length));
                 done();
             });
-    })
-    it('Qr with errors is correct', function(done){
-        //We need save qr, qr-reader modules are a shit
-        done();
     }),
     it('Get Qr with vcard', function(done){
         request(app)
-            .put(conf.api.vcard)
+            .put(conf.api.uri)
             .send(jsonVcard)
             .expect(200)
             .end(function(err, res){
@@ -108,13 +99,13 @@ describe('#QR test', function(){
                 var qrr = new qrreader();
                 qrr.callback = function(result){
                     vcardparse.parseString(result, function(err, json_){
-                        if (err == null){
-                            json_.n.first.should.equal(jsonVcard.firstName);
-                            json_.n.last.should.equal(jsonVcard.lastName);
-                            json_.photo.value.should.equal(jsonVcard.photo);
-                            json_.tel[0].value.should.equal(jsonVcard.workPhone);
-                            json_.title.should.equal(jsonVcard.title);
-                            json_.org.name.should.equal(jsonVcard.organization);
+                        if (err === null){
+                            json_.n.first.should.equal(jsonVcard.vcard.firstName);
+                            json_.n.last.should.equal(jsonVcard.vcard.lastName);
+                            json_.photo.value.should.equal(jsonVcard.vcard.photo);
+                            json_.tel[0].value.should.equal(jsonVcard.vcard.workPhone);
+                            json_.title.should.equal(jsonVcard.vcard.title);
+                            json_.org.name.should.equal(jsonVcard.vcard.organization);
                             json_.url[0].value.should.equal(json.urlShort);
                         }
                     });
@@ -126,11 +117,12 @@ describe('#QR test', function(){
         }
     }),
     it('Get QrLocal', function(done){
+        this.timeout(30000);
         var img = fs.readFileSync('./test/img/logo.png');
         var jsonlocal = {"urlsource": urlTest, "color":{"r": 137, "g": 127, "b": 38 },
-            "logo": img, "user": "dummy", "pass": "dummy"};
+            "logo": img, "local": "true"};
         request(app)
-            .put(conf.api.qrlocal)
+            .put(conf.api.uri)
             .send(jsonlocal)
             .expect(200)
             .end(function(err, res){
@@ -163,8 +155,9 @@ describe('#QR test', function(){
         }
     }),
     it('Get QrLocal with vcard', function(done){
+        this.timeout(30000);
         request(app)
-            .put(conf.api.vcardlocal)
+            .put(conf.api.uri)
             .send(jsonVcard)
             .expect(200)
             .end(function(err, res){
@@ -212,12 +205,8 @@ describe('#QR test', function(){
         for(var i in idDelete){
             ddbb.remove(idDelete[i], function(err){
                 if(err) console.error("Error delete: " + err);
+                else done();
             });
         }
-        //Remove user
-        ddbb.removeUser({"username": "dummy", "password": "dummy"}, function(err){
-            if(err) console.error("Error delete: " + err);
-            else done();
-        });
     })
 });

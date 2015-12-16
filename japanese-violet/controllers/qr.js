@@ -5,10 +5,8 @@ var ddbbUri = require('../models/shortUrlDB.js'),
     shortid = require('shortid'),
     http = require('http'),
     vCard = require('vcards-js'),
-    urlencode = require('urlencode'),
-    fs = require('fs');
-
-module.exports = function(app){
+    urlencode = require('urlencode');
+module.exports = {
 
     /**
      * Create a QR
@@ -19,27 +17,17 @@ module.exports = function(app){
      *      errLevel: null or L or M or Q or H,
      * }
      */
-    app.put(conf.api.qr, function(req, res){
-        if (conf.log == true) console.log("Input Conex: " + req);
-        if (req.body.urlsource == undefined) {
-            if (conf.log == true) console.error("Miss urlsource in json");
-            res.sendStatus(400);
-            return 0;
-        }
-        //Comprueba el usuario
-        if(req.body.user == '') res.sendStatus(400);
-
+    createQrOnline: function(req, res){
         //Level of error
         if (req.body.err == true) ext = conf.exter.qrErr + req.body.errLevel + "&chl=";
         else ext = conf.extern.qr;
 
         var shortUrl_ = shortid.generate();
-        var urlShortComplete = "htt://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_,
-            "user": req.body.user, "pass": req.body.pass};
+        var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
         //Get QR imagec
         getQr(ext + urlShortComplete, json, res);
-    }),
+    },
     /**
      * Create a qr with a VCARD
      * Format of body:
@@ -47,40 +35,30 @@ module.exports = function(app){
      *      urlSource: string,
      *      err: true or false,
      *      errLevel: null or L or M or Q or H,
-     *      firstName: null or string,
-     *      lastName: null or string,
-     *      organization: null or string,
-     *      photo: null or url,
-     *      workPhone: null or string,
-     *      birthday: null or string,
-     *      title: null or string
+     *      vcard {
+     *          firstName: null or string,
+     *          lastName: null or string,
+     *          organization: null or string,
+     *          photo: null or url,
+     *          workPhone: null or string,
+     *          birthday: null or string,
+     *          title: null or string
+     *      }
      * }
      */
-    app.put(conf.api.vcard, function(req, res){
-        if (conf.log == true) console.log("Input Conex: " + req);
-        //Exist a urlsource
-        if (req.body.urlsource == undefined) {
-            if (conf.log == true) console.error("Miss urlsource in json");
-            res.sendStatus(400);
-            return 0;
-        }
-        //Comprueba el usuario
-        if(req.body.user == '') res.sendStatus(400);
-
+    createQrOnlineVcard: function(req, res){
         //Level of error
         if (req.body.err == true) ext = conf.exter.qrErr + req.body.errLevel + "&chl=";
         else ext = conf.extern.qr;
 
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_,
-             "user": req.body.user, "pass": req.body.pass};
-        var urlShortComplete = "htt://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
-
-        var vcard = createVcard(req, urlShortComplete);
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
+        var vcard = createVcard(req.body.vcard, urlShortComplete);
 
         //Create qR
         getQr(ext + urlencode(vcard.getFormattedString()), json, res);
-    }),
+    },
     /**
      * Create a local qr
      * Format of body:
@@ -96,26 +74,13 @@ module.exports = function(app){
      *      logo: null or buffer with logo (max 30x30 pixels)
      * }
      */
-    app.put(conf.api.qrlocal, function(req,res){
-        //Our Qr local library only accept minium, medium high and max level or error
-        var errLevel = {"L": "minium", "M": "medium","Q": "high", "H":"max"};
-        if (conf.log == true) console.log("Input Conex: " + req);
-        //Exist a urlsource
-        if (req.body.urlsource == undefined) {
-            if (conf.log == true) console.error("Miss urlsource in json");
-            res.sendStatus(400);
-            return 0;
-        }
-        //Comprueba el usuario
-        if(req.body.user == '') res.sendStatus(400);
-
+    createQrLocal: function(req,res){
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_,
-            "user": req.body.user, "pass": req.body.pass};
-        var urlShortComplete = "htt://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
 
-        createQrLocal(urlShortComplete, json, req, res);
-    }),
+        createQrLocal_(urlShortComplete, json, req, res);
+    },
     /**
      * Create a local qr with vcard
      * Format of body:
@@ -128,29 +93,27 @@ module.exports = function(app){
      *          g: green color,
      *          b: blue color
      *      },
+     *      vcard {
+     *          firstName: null or string,
+     *          lastName: null or string,
+     *          organization: null or string,
+     *          photo: null or url,
+     *          workPhone: null or string,
+     *          birthday: null or string,
+     *          title: null or string
+     *      },
      *      logo: null or buffer with logo (max 30x30 pixels)
      * }
      */
-    app.put(conf.api.vcardlocal, function(req,res){
-        if (conf.log == true) console.log("Input Conex: " + req);
-        //Exist a urlsource
-        if (req.body.urlsource == undefined) {
-            if (conf.log == true) console.error("Miss urlsource in json");
-            res.sendStatus(400);
-            return 0;
-        }
-        //Comprueba el usuario
-        if(req.body.user == '') res.sendStatus(400);
-
+    createQrLocalVcard: function(req,res){
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_,
-            "user": req.body.user, "pass": req.body.pass};
-        var urlShortComplete = "htt://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
 
-        var vcard = createVcard(req, urlShortComplete);
+        var vcard = createVcard(req.body.vcard, urlShortComplete);
 
         createQrLocal(urlencode(vcard.getFormattedString()), json, req, res);
-    })
+    }
 }
 
 //Get qr from google service
@@ -165,11 +128,12 @@ function getQr(url, json, res){
            response.on('end', function(){
                json.qr = img;
                ddbbUri.add(json, function(err, result){
-                   delete json.pass;
-                   json.urlShort = "htt://" + conf.ip + ":" + conf.port
+                    json.urlqr = "http://" + conf.ip + ":" + conf.port
+                        + conf.api.qr + "/" + json.urlShort;
+                    json.urlShort = "http://" + conf.ip + ":" + conf.port
                         + conf.api.uri + "/" + json.urlShort;
-                   if (err || result == {}) res.sendStatus(400);
-                   else res.send(json);
+                    if (err || result == {}) res.sendStatus(400);
+                    else res.send(json);
                });
            });
        } else {
@@ -188,20 +152,21 @@ function createVcard(req, urlShortComplete){
     //Create vCard
     vcard = vCard();
     //Json to VCard
-    if (req.body.firstName != undefined) vcard.firstName = req.body.firstName;
-    if (req.body.lastName != undefined) vcard.lastName = req.body.lastName;
-    if (req.body.organization != undefined) vcard.organization = req.body.organization;
-    if (req.body.photo != undefined) vcard.photo.attachFromUrl(req.body.photo);
-    if (req.body.workPhone != undefined) vcard.workPhone = req.body.workPhone;
-    if (req.body.birthday != undefined) vcard.birthday = req.body.birthday;
-    if (req.body.title != undefined) vcard.title = req.body.title;
+    if (req.firstName !== undefined) vcard.firstName = req.firstName;
+    if (req.lastName !== undefined) vcard.lastName = req.lastName;
+    if (req.organization !== undefined) vcard.organization = req.organization;
+    if (req.photo !== undefined) vcard.photo.attachFromUrl(req.photo);
+    if (req.workPhone !== undefined) vcard.workPhone = req.workPhone;
+    if (req.birthday !== undefined) vcard.birthday = req.birthday;
+    if (req.title !== undefined) vcard.title = req.title;
+
     vcard.url = urlShortComplete;
 
     return vcard;
 }
 
 //Create a qrlocal
-function createQrLocal(add, json, req, res){
+function createQrLocal_(add, json, req, res){
     //Our Qr local library only accept minium, medium high and max level or error
     var errLevel = {"L": "minium", "M": "medium","Q": "high", "H":"max"};
     var opt = {};
@@ -219,8 +184,9 @@ function createQrLocal(add, json, req, res){
         else {
             ddbbUri.add(json, function(err, result){
                 json.qr = buf;
-                delete json.pass;
-                json.urlShort = "htt://" + conf.ip + ":" + conf.port
+                json.urlqr = "http://" + conf.ip + ":" + conf.port
+                     + conf.api.qr + "/" + json.urlShort;
+                json.urlShort = "http://" + conf.ip + ":" + conf.port
                      + conf.api.uri + "/" + json.urlShort;
                 if (err || result == {}) res.sendStatus(400);
                 else res.send(json);

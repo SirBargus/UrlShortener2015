@@ -13,7 +13,7 @@ var uriSchema = new mongoose.Schema({
     urlSource:  {type: String, require: true},
     urlShort:   {type: String, require: true, unique: true},
     qr: Buffer,
-    user: {type: String, require: true},
+    user: {type: String},
     statistics:{
         click:{
             count:  {type: Number, default:0},
@@ -45,14 +45,10 @@ module.exports = {
     //Crea URI
     /** Eliminar error de  pass **/
     add: function(add, callback){
-        user.findOne({"username": add.user, "password": add.pass},
-                function(err, result){
-            if (err != null || result == {}) callback("Error");
-            var newUri = new uri(add);
-            newUri.save(function(err){
-                callback(err, newUri);
-            });
-        })
+        var newUri = new uri(add);
+        newUri.save(function(err){
+            callback(err, newUri);
+        });
     },
     //Borra URI
     remove: function(urlShort, callback){

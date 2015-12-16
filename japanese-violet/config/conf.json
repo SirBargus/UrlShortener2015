@@ -3,16 +3,12 @@
     "ip": "localhost",
     "log": false,
     "ddbb":{
-            "url":"mongodb://localhost:27017/iweb"
+            "url":"mongodb://iweb:iweb@ds057204.mongolab.com:57204/iweb"
     },
     "api":{
         "up": "/api/v1/up",
         "uri": "/api/v1/url",
-        "cool": "/cool",
         "qr": "/api/v1/qr",
-        "qrlocal": "/api/v1/qrlocal",
-        "vcard": "/api/v1/vcard",
-        "vcardlocal": "/api/v1/vcardlocal",
         "createUser": "/api/v1/createuser",
         "uriUser": "/api/v1/urlU"
     },

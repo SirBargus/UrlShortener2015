@@ -10,13 +10,6 @@ var urlTest = "http://google.es";
 var json = "";
 //Base test
 describe('#Base test', function(){
-    //Creamos el usuario
-    before(function(done){
-        ddbb.addUser({"username": "dummy", "password": "dummy", "rol": "USUARIO"}, function(err, result){
-            if(err) throw err;
-            else done();
-        });
-    }),
     //Is alive
     it('Is server alive?', function(done){
         request(app)
@@ -27,8 +20,8 @@ describe('#Base test', function(){
     it('Create short uri', function(done){
         this.timeout(30000);
         request(app)
-            .post(conf.api.uri)
-            .send({"urlsource": urlTest, "user": "dummy", "pass": "dummy"})
+            .put(conf.api.uri)
+            .send({"urlsource": urlTest})
             .expect(200)
             .end(function(err,res){
                 if (err) throw err;
@@ -39,9 +32,9 @@ describe('#Base test', function(){
     it('Get short uri', function(done){
         if (json.urlShort != undefined){
             var url = json.urlShort.substring("http://".length + conf.ip.length +
-                conf.port.length + 1, json.urlShort.length);
+                conf.port.length + 2, json.urlShort.length);
             request(app)
-                .get(url)
+                .get("/" + url)
                 .expect(302)
                 .end(function(err, res){
                     if (err) throw err;
@@ -49,17 +42,13 @@ describe('#Base test', function(){
                     done();
                 });
         }
-    }),
+    })
     //Delete database's info
     after(function(done){
         //Take id from uri
         var id = json.urlShort.substring("http://".length + conf.ip.length +
             conf.port.length + conf.api.uri.length + 2, json.urlShort.length);
         ddbb.remove(id, function(err){
-            if(err) console.error("Error delete: " + err);
-        });
-        //Remove user
-        ddbb.removeUser({"username": "dummy", "password": "dummy"}, function(err){
             if(err) console.error("Error delete: " + err);
             else done();
         });
