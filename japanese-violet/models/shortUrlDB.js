@@ -27,16 +27,10 @@ var uriSchema = new mongoose.Schema({
     }
 });
 var userSchema = new mongoose.Schema({
-    local: {
-        username: {type: String, unique: true},
-        password: String,
-        rol: String
-    },
-    twitter: {
-        id: {type: String, unique: true},
-        token: String,
-        username: {type: String, unique: true}
-    }
+    username: String,
+    password: String,
+    id_: {type: String, unique: true, require: true},
+    rol: String
 });
 
 var uri = mongoose.model('uri', uriSchema);

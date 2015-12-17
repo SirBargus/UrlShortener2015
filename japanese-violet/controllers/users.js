@@ -11,7 +11,8 @@ module.exports = function(app, passport){
     app.post('/signup', passport.authenticate('local-signup', {
 		successRedirect : '/', // redirect to the secure profile section
 		failureRedirect : '/signup'
-	})),
+	}));
+
     /*
      * Process login with passport-local
      */
@@ -19,15 +20,34 @@ module.exports = function(app, passport){
         successRedirect: '/',
         failureRedirect: '/login'
     }));
-    app.get('/login/twitter',  
-        passport.authenticate('twitter')
-    );
 
-    // handle the callback after facebook has authenticated the user
+    /*
+     * Login with twitter
+     */
+    app.get('/login/twitter', passport.authenticate('twitter'));
+
+    /*
+     * handle the callback after twitter has authenticated the user
+     */
     app.get('/login/twitter/callback',
         passport.authenticate('twitter', {
-            successRedirect : '/twitter',
-            failureRedirect : '/'
+            successRedirect : '/',
+            failureRedirect : '/login'
         })
     );
+
+    /*
+     * Login with google
+     */
+     app.get('/login/google', passport.authenticate('google', { scope: [
+            'https://www.googleapis.com/auth/plus.login']
+     }));
+    /*
+     * handle the callback after twitter has authenticated the user
+     */
+     app.get('/login/google/callback',
+     	passport.authenticate( 'google', {
+     		successRedirect: '/',
+     		failureRedirect: '/login'
+     }));
 }

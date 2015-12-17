@@ -23,6 +23,11 @@
             "consumerKey": "0uFQLM80ByaPB5kgU8zf3li7e",
             "consumerSecret": "FZfgbLhY9qN7ucqONLdeYDlJGP2gqvUH9Bb7dqhFJwLBNMWR6h",
             "callbackURL": "http://localhost:8080/login/twitter/callback"
+        },
+        "google":{
+            "clientID": "1008318157126-rtpj66gb5o47ccaanl69ko2upaonh7sp.apps.googleusercontent.com",
+            "clientSecret": "vkr7LPxoSA6z_p9zj0cL9LMX",
+            "callbackURL": "http://localhost:8080/login/google/callback"
         }
     }
 }
