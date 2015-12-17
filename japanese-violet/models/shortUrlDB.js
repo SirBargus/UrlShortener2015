@@ -13,7 +13,7 @@ var uriSchema = new mongoose.Schema({
     urlSource:  {type: String, require: true},
     urlShort:   {type: String, require: true, unique: true},
     qr: Buffer,
-    user: {type: String},
+    user: {type: String, require: true},
     statistics:{
         click:{
             count:  {type: Number, default:0},

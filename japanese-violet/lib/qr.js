@@ -24,7 +24,7 @@ module.exports = {
 
         var shortUrl_ = shortid.generate();
         var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_};
         //Get QR imagec
         getQr(ext + urlShortComplete, json, res);
     },
@@ -52,7 +52,7 @@ module.exports = {
         else ext = conf.extern.qr;
 
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_};
         var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
         var vcard = createVcard(req.body.vcard, urlShortComplete);
 
@@ -76,7 +76,7 @@ module.exports = {
      */
     createQrLocal: function(req,res){
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_};
         var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
 
         createQrLocal_(urlShortComplete, json, req, res);
@@ -107,7 +107,7 @@ module.exports = {
      */
     createQrLocalVcard: function(req,res){
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_};
         var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
 
         var vcard = createVcard(req.body.vcard, urlShortComplete);
