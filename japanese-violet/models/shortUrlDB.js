@@ -13,7 +13,7 @@ var uriSchema = new mongoose.Schema({
     urlSource:  {type: String, require: true},
     urlShort:   {type: String, require: true, unique: true},
     qr: Buffer,
-    user: {type: String, require: true},
+    user: {type: String},
     statistics:{
         click:{
             count:  {type: Number, default:0},
@@ -27,9 +27,11 @@ var uriSchema = new mongoose.Schema({
     }
 });
 var userSchema = new mongoose.Schema({
-    username:   {type: String, require: true, unique: true},
-    password:   {type: String, require: true },
-    rol: {type: String, require: true}
+    username: String,
+    password: String,
+    id_: {type: String, unique: true, require: true},
+    rol: String,
+    token: String
 });
 
 var uri = mongoose.model('uri', uriSchema);
@@ -45,14 +47,10 @@ module.exports = {
     //Crea URI
     /** Eliminar error de  pass **/
     add: function(add, callback){
-        user.findOne({"username": add.user, "password": add.pass},
-                function(err, result){
-            if (err != null || result == {}) callback("Error");
-            var newUri = new uri(add);
-            newUri.save(function(err){
-                callback(err, newUri);
-            });
-        })
+        var newUri = new uri(add);
+        newUri.save(function(err){
+            callback(err, newUri);
+        });
     },
     //Borra URI
     remove: function(urlShort, callback){
@@ -84,22 +82,28 @@ module.exports = {
 
     /****  USER SCHEMA  ****/
     //Añadir usuario
-    addUser : function(add, callback){
+    addUser: function(add, callback){
         var newUser = new user(add);
         newUser.save(function(err){
             callback(err, newUser);
         });
     },
     //Eliminar usuario
-    removeUser: function(user_, callback){
+    removeUserLocal: function(user_, callback){
         user.remove({"username": user_.username, "password": user_.password}, function(err){
             callback(err);
         });
     },
     //Buscar  usuario
     findUser: function(user_, callback){
-        user.findOne({"username": user_.username, "password": user_.password}, function(err, res){
+        user.findOne({"username": user_.username,
+                     "password": user_.password}, function(err, res){
             callback(err, res);
+        });
+    },
+    findUserById: function(id, callback){
+        user.findById(id, function(err, user) {
+            callback(err, user);
         });
     }
 };
