@@ -15,15 +15,14 @@ var uriSchema = new mongoose.Schema({
     qr: Buffer,
     user: {type: String, require: true},
     statistics:{
-        click:{
-            count:  {type: Number, default:0},
-            date:   {type: String, default:"0"},
-            browser:{type: String},
-            ip:     {type: String}
-        },
-        created:{type: String, default:"0"},
+        total:  {type: Number, default:0},
+        date:{type: String, default:"0"},
         browser:{type: String},
-        ip:     {type: String}
+        ip:     {type: String},
+        country:{type: String},
+        city:   {type: String},
+        //date,browser,ip,country,city
+        click:[String,String,String,String,String]
     }
 });
 var userSchema = new mongoose.Schema({
@@ -46,13 +45,13 @@ module.exports = {
     /** Eliminar error de  pass **/
     add: function(add, callback){
         user.findOne({"username": add.user, "password": add.pass},
-                function(err, result){
-            if (err != null || result == {}) callback("Error");
-            var newUri = new uri(add);
-            newUri.save(function(err){
-                callback(err, newUri);
-            });
-        })
+            function(err, result){
+                if (err != null || result == {}) callback("Error");
+                var newUri = new uri(add);
+                newUri.save(function(err){
+                    callback(err, newUri);
+                });
+            })
     },
     //Borra URI
     remove: function(urlShort, callback){
