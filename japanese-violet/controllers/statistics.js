@@ -24,7 +24,7 @@ module.exports = function(app){
     }),
 
     //get statistics in json
-    app.get(conf.api.uri + "/:shortUrl" + "+/json", function(req, res){
+    app.get(conf.api.uri + "/:shortUrl" + "+.json", function(req, res){
         if (conf.log == true) console.log("Input Conex: " + req);
         var json = {"urlShort": req.params.shortUrl};
         //req.param is deprecated, cant use string to access information
@@ -38,7 +38,7 @@ module.exports = function(app){
     }),
 
     //get statistics in html
-    app.get(conf.api.uri + "/:shortUrl" + "+/html", function(req, res){
+    app.get(conf.api.uri + "/:shortUrl" + "+.html", function(req, res){
         if (conf.log == true) console.log("Input Conex: " + req);
         var json = {"urlShort": req.params.shortUrl};
         //req.param is deprecated, cant use string to access information
