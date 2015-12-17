@@ -2,7 +2,8 @@
 var ddbbUri = require('../models/shortUrlDB.js'),
     conf = require('../config/conf'),
     qr = require('../lib/qr.js'),
-    shortid = require('shortid');
+    shortid = require('shortid'),
+    http = require('http');
 
 // File with only server's methods
 module.exports = function(app, passport){
@@ -84,5 +85,20 @@ module.exports = function(app, passport){
             if (req.body.vcard === undefined) qr.createQrOnline(req, res);
             else qr.createQrOnlineVcard(req, res);
         }
+    }),
+    /*
+     * Get the shorturi and return a qr
+     */
+    app.get('/qr/:id', function(req, res_){
+        ddbbUri.find(req.params.id, function(err, result){
+            if (err != null && con.log == true) console.error("Error: " + err);
+            if (err == null && result != null){
+                //Send image to show into an user
+                res_.writeHead(200, {'Content-Type': 'image/png' });
+                res_.end(result.qr, 'binary');
+                //ddbbUri.increase(json,function(err, result){}); //Cambiar por una al probar
+            }
+            else return res_.sendStatus(401);
+        });
     })
 }
