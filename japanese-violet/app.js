@@ -32,7 +32,7 @@ var http = require('http').Server(app),
     io = require('socket.io')(http);
 
 //Controller
-require('./controllers/base.js')(app);
+require('./controllers/base.js')(app, passport);
 require('./controllers/users.js')(app, passport);
 require('./controllers/statistics.js')(app);
 

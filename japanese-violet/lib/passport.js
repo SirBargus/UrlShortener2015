@@ -15,25 +15,34 @@ module.exports = function(passport) {
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
+        ddbb.findUserById(id, function(err, user) {
             done(err, user);
         });
     });
 
- 	// =========================================================================
-    // LOCAL SIGNUP ============================================================
-    // =========================================================================
-    // we are using named strategies since we have one for login and one for signup
-	// by default, if there was no name, it would just be called 'local'
-
+    /*
+     * Local sign-up
+     */
     passport.use('local-signup', new LocalStrategy({
-        passReqToCallback : true
-    },
-    function(req, username, password, done) {
+        passReqToCallback: true
+    }, function(req, username, password, done) {
         var json = {"local": {"username": username, "password": password, "rol": req.body.rol}};
         ddbb.addUser(json, function(err, res){
             if (err) throw err;
             return done(null, res);
         });
+    }));
+
+    /*
+     * Local login
+     */
+    passport.use('local-login', new LocalStrategy({
+        passReqToCallback: true
+    }, function(req, username, password, done){
+        var json = {"local": {"username": username, "password": password}};
+        ddbb.findUser(json, function(err, res){
+            if(err || !res) done(err);
+            else done(null, res);
+        })
     }));
 };

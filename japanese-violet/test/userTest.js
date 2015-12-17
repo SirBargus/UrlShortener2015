@@ -15,10 +15,26 @@ describe('#User Test', function(){
         request(app)
             .post('/signup')
             .send({"username": "dummy", "password": "dummy", "rol": "USER"})
-            .expect(302, done)
+            .expect(302)
+            .end(function(err, res){
+                res.header['location'].should.equal('/');
+                done();
+            });
+    }),
+    //Login user
+    it('Login user', function(done){
+        this.timeout(30000);
+        request(app)
+            .post('/login')
+            .send({"username": "dummy", "password": "dummy"})
+            .expect(302)
+            .end(function(err, res){
+                res.header['location'].should.equal('/');
+                done();
+            });
     }),
     after(function(done){
-        ddbb.removeUser({"username": "dummy", "password": "dummy"}, function(err, res){
+        ddbb.removeUserLocal({"username": "dummy", "password": "dummy"}, function(err, res){
             if (err) throw err;
             else done()
         });

@@ -10,7 +10,9 @@
         "uri": "/api/v1/url",
         "qr": "/api/v1/qr",
         "createUser": "/api/v1/createuser",
-        "uriUser": "/api/v1/urlU"
+        "uriUser": "/api/v1/urlU",
+        "login_local": "/api/v1/login",
+        "signup_local": "api/v1/signup"
     },
     "extern":{
         "qr": "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=",

@@ -1,11 +1,11 @@
 //route.js
 var ddbbUri = require('../models/shortUrlDB.js'),
     conf = require('../config/conf'),
-    qr = require('./qr.js'),
+    qr = require('../lib/qr.js'),
     shortid = require('shortid');
 
 // File with only server's methods
-module.exports = function(app){
+module.exports = function(app, passport){
 
     //A simple method to test if server is alive
     app.get(conf.api.up, function(req, res){
@@ -65,11 +65,16 @@ module.exports = function(app){
      * }
      */
     app.put(conf.api.uri, function(req, res){
-        if (conf.log == true) console.log("Input Conex: " + req);
+        if (conf.log === true) console.log("Input Conex: " + req);
+        //Check user is authenticated
+        if (req.user === undefined) res.sendStatus(401);
+        //Generate id rom a shortUrl
         var shortUrl_ = shortid.generate();
         if (req.body.urlsource === undefined) res.sendStatus(401);
+
         //Crea el la url
         var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+
         //Qr request for local
         if (req.body.local === "true"){
             //Qr local without vcard

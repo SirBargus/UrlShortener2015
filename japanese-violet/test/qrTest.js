@@ -16,12 +16,18 @@
 //     "workPhone": "123", "birthday":new Date("14-03-1994"), "title":"dummy"},
 //     "urlsource": urlTest};
 // var idDelete = [];
+// var agent = request.agent(app);
 // //Base test
 // describe('#QR test', function(){
+//     before(function(done){
+//         this.timeout(3000);
+//         agent.post('/signup')
+//             .send({"username": "dummy", "password": "dummy", "rol": "USER"})
+//             .expect(302, done);
+//     }),
 //     //Get QR
 //     it('Get Qr', function(done){
-//         request(app)
-//             .put(conf.api.uri)
+//         agent.put(conf.api.uri)
 //             .send({"urlsource": urlTest})
 //             .expect(200)
 //             .end(function(err, res){
@@ -64,8 +70,7 @@
 //     })
 //     it('Get Qr with error_correction_level', function(done){
 //         json = '';
-//         request(app)
-//             .put(conf.api.uri)
+//         agent.put(conf.api.uri)
 //             .send({"urlsource": urlTest, "qrErr": true, "errLevel": "H"})
 //             .expect(200)
 //             .end(function(err, res){
@@ -77,8 +82,7 @@
 //             });
 //     }),
 //     it('Get Qr with vcard', function(done){
-//         request(app)
-//             .put(conf.api.uri)
+//         agent.put(conf.api.uri)
 //             .send(jsonVcard)
 //             .expect(200)
 //             .end(function(err, res){
@@ -121,8 +125,7 @@
 //         var img = fs.readFileSync('./test/img/logo.png');
 //         var jsonlocal = {"urlsource": urlTest, "color":{"r": 137, "g": 127, "b": 38 },
 //             "logo": img, "local": "true"};
-//         request(app)
-//             .put(conf.api.uri)
+//         agent.put(conf.api.uri)
 //             .send(jsonlocal)
 //             .expect(200)
 //             .end(function(err, res){
@@ -156,8 +159,7 @@
 //     }),
 //     it('Get QrLocal with vcard', function(done){
 //         this.timeout(30000);
-//         request(app)
-//             .put(conf.api.uri)
+//         agent.put(conf.api.uri)
 //             .send(jsonVcard)
 //             .expect(200)
 //             .end(function(err, res){
@@ -205,8 +207,11 @@
 //         for(var i in idDelete){
 //             ddbb.remove(idDelete[i], function(err){
 //                 if(err) console.error("Error delete: " + err);
-//                 else done();
 //             });
 //         }
+//         ddbb.removeUserLocal({"username": "dummy", "password": "dummy"}, function(err, res){
+//             if (err) throw err;
+//             else done()
+//         });
 //     })
 // });
