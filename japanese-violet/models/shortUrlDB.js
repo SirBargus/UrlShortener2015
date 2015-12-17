@@ -62,6 +62,8 @@ module.exports = {
     //Busca por URI
     find: function(urlShort, callback){
         uri.findOne({"urlShort": urlShort}, function(err, res){
+            res.statistics.total= res.statistics.total + 1;
+            res.statistics.save();
             callback(err, res);
         });
     },

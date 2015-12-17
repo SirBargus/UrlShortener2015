@@ -14,16 +14,20 @@ module.exports = function(app){
     //getUrl
     app.get(conf.api.uri + "/:shortUrl", function(req, res){
         if (conf.log == true) console.log("Input Conex: " + req);
-        var json = {"urlShort": req.params.shortUrl};
-        //req.param is deprecated, cant use string to access information
-        ddbbUri.find(req.params.shortUrl, function(err, result){
-            if (err != null && con.log == true) console.error("Error: " + err);
-            if (err == null && result != null){
-                ddbbUri.increase(json,function(err, result){}); //Cambiar por una al probar
-                res.redirect(result.urlSource);
-            }
-            else res.sendStatus(401);
-        });
+        //geoip is synchronous
+        var geo = geoip.lookup(req.body.ip,function(){
+                var json = {"urlShort": req.params.shortUrl, "date": new Date(),
+                    "browser": req.body.browser, "ip": req.body.ip, "country": geo.country,
+                    "city": geo.city};
+                //req.param is deprecated, cant use string to access information
+                ddbbUri.find(req.params.shortUrl, function(err, result){
+                    if (err != null && con.log == true) console.error("Error: " + err);
+                    if (err == null && result != null){
+                        res.redirect(result.urlSource);
+                    }
+                    else res.sendStatus(401);
+                });
+            });
     }),
     //getUrlByUsers
     app.get(conf.api.uriUser + "/:user", function(req, res){

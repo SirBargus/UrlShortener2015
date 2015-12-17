@@ -108,3 +108,8 @@ Separated online node, install over dockers
     $ echo "deb http://repo.mongodb.org/apt/ubuntu precise/mongodb-org/3.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.0.list
 
     $ sudo apt-get install -y mongodb-org
+    
+    
+##Libs
+
+[node-geoip](https://github.com/bluesmoon/node-geoip)
