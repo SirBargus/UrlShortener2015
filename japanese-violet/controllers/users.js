@@ -19,4 +19,15 @@ module.exports = function(app, passport){
         successRedirect: '/',
         failureRedirect: '/login'
     }));
+    app.get('/login/twitter',  
+        passport.authenticate('twitter')
+    );
+
+    // handle the callback after facebook has authenticated the user
+    app.get('/login/twitter/callback',
+        passport.authenticate('twitter', {
+            successRedirect : '/twitter',
+            failureRedirect : '/'
+        })
+    );
 }

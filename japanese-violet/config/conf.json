@@ -17,5 +17,12 @@
     "extern":{
         "qr": "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=",
         "qrErr": "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chld="
+    },
+    "credentials":{
+        "twitter": {
+            "consumerKey": "0uFQLM80ByaPB5kgU8zf3li7e",
+            "consumerSecret": "FZfgbLhY9qN7ucqONLdeYDlJGP2gqvUH9Bb7dqhFJwLBNMWR6h",
+            "callbackURL": "http://localhost:8080/login/twitter/callback"
+        }
     }
 }

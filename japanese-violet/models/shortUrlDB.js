@@ -31,6 +31,11 @@ var userSchema = new mongoose.Schema({
         username: {type: String, unique: true},
         password: String,
         rol: String
+    },
+    twitter: {
+        id: {type: String, unique: true},
+        token: String,
+        username: {type: String, unique: true}
     }
 });
 
@@ -82,7 +87,7 @@ module.exports = {
 
     /****  USER SCHEMA  ****/
     //Añadir usuario
-    addUser : function(add, callback){
+    addUser: function(add, callback){
         var newUser = new user(add);
         newUser.save(function(err){
             callback(err, newUser);

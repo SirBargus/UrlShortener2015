@@ -6,8 +6,7 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     config = require('./config/conf'),
     passport = require('passport'),
-    cookieParser = require('cookie-parser'),
-    LocalStrategy = require('passport-local').Strategy;
+    cookieParser = require('cookie-parser');
 
 require('./lib/passport')(passport); // pass passport for configuration
 
