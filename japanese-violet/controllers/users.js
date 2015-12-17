@@ -8,7 +8,7 @@ module.exports = function(app, passport){
     /*
      * Process signup with passport-local
      */
-    app.post('/signup', passport.authenticate('local-signup', {
+    app.post(conf.api.signup_local, passport.authenticate('local-signup', {
 		successRedirect : '/', // redirect to the secure profile section
 		failureRedirect : '/signup'
 	}));
@@ -16,7 +16,7 @@ module.exports = function(app, passport){
     /*
      * Process login with passport-local
      */
-    app.post('/login', passport.authenticate('local-login', {
+    app.post(conf.api.login_local, passport.authenticate('local-login', {
         successRedirect: '/',
         failureRedirect: '/login'
     }));
@@ -24,13 +24,12 @@ module.exports = function(app, passport){
     /*
      * Login with twitter
      */
-    app.get('/login/twitter', passport.authenticate('twitter'));
+    app.get(conf.api.twitter, passport.authenticate('twitter'));
 
     /*
      * handle the callback after twitter has authenticated the user
      */
-    app.get('/login/twitter/callback',
-        passport.authenticate('twitter', {
+    app.get(conf.api.twitter_callback, passport.authenticate('twitter', {
             successRedirect : '/',
             failureRedirect : '/login'
         })
@@ -39,15 +38,27 @@ module.exports = function(app, passport){
     /*
      * Login with google
      */
-     app.get('/login/google', passport.authenticate('google', { scope: [
+     app.get(conf.api.google, passport.authenticate('google', { scope: [
             'https://www.googleapis.com/auth/plus.login']
      }));
     /*
-     * handle the callback after twitter has authenticated the user
+     * handle the callback after google has authenticated the user
      */
-     app.get('/login/google/callback',
-     	passport.authenticate( 'google', {
+     app.get(conf.api.google_callback, passport.authenticate( 'google', {
      		successRedirect: '/',
      		failureRedirect: '/login'
      }));
+
+    /*
+     * Login with Facebook
+     */
+    app.get(conf.api.facebook, passport.authenticate('facebook', { scope : 'email' }));
+    /*
+     * handle the callback after facebook has authenticated the user
+     */
+    app.get(conf.api.facebook_callback, passport.authenticate('facebook', {
+            successRedirect : '/profile',
+            failureRedirect : '/'
+        })
+    );
 }

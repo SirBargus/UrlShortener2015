@@ -30,7 +30,8 @@ var userSchema = new mongoose.Schema({
     username: String,
     password: String,
     id_: {type: String, unique: true, require: true},
-    rol: String
+    rol: String,
+    token: String
 });
 
 var uri = mongoose.model('uri', uriSchema);
@@ -89,14 +90,14 @@ module.exports = {
     },
     //Eliminar usuario
     removeUserLocal: function(user_, callback){
-        user.remove({"local.username": user_.username, "local.password": user_.password}, function(err){
+        user.remove({"username": user_.username, "password": user_.password}, function(err){
             callback(err);
         });
     },
     //Buscar  usuario
     findUser: function(user_, callback){
-        user.findOne({"local.username": user_.local.username,
-                     "local.password": user_.local.password}, function(err, res){
+        user.findOne({"username": user_.username,
+                     "password": user_.password}, function(err, res){
             callback(err, res);
         });
     },

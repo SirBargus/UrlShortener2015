@@ -18,9 +18,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cookieParser());
 app.use(require('express-session')({
-    secret: 'keyboard cat',
+    secret: 'kitties',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie : { secure: false }
 }));
 app.use(passport.initialize());
 app.use(passport.session());

@@ -6,13 +6,19 @@
             "url":"mongodb://iweb:iweb@ds057204.mongolab.com:57204/iweb"
     },
     "api":{
-        "up": "/api/v1/up",
-        "uri": "/api/v1/url",
-        "qr": "/api/v1/qr",
-        "createUser": "/api/v1/createuser",
-        "uriUser": "/api/v1/urlU",
-        "login_local": "/api/v1/login",
-        "signup_local": "api/v1/signup"
+        "up": "/up",
+        "uri": "/url",
+        "qr": "/qr",
+        "createUser": "/createuser",
+        "uriUser": "/urlU",
+        "login_local": "/login",
+        "signup_local": "/signup",
+        "twitter": "/login/twitter",
+        "twitter_callback": "/login/twitter/callback",
+        "google": "/login/google",
+        "google_callback": "/login/google/callback",
+        "facebook": "/login/facebook",
+        "facebook_callback": "/login/facebook/callback"
     },
     "extern":{
         "qr": "http://chart.apis.google.com/chart?cht=qr&chs=200x200&chl=",
@@ -24,10 +30,15 @@
             "consumerSecret": "FZfgbLhY9qN7ucqONLdeYDlJGP2gqvUH9Bb7dqhFJwLBNMWR6h",
             "callbackURL": "http://localhost:8080/login/twitter/callback"
         },
-        "google":{
+        "google": {
             "clientID": "1008318157126-rtpj66gb5o47ccaanl69ko2upaonh7sp.apps.googleusercontent.com",
             "clientSecret": "vkr7LPxoSA6z_p9zj0cL9LMX",
             "callbackURL": "http://localhost:8080/login/google/callback"
+        },
+        "facebook": {
+            "clientID": "174135379606775",
+            "clientSecret": "57a3ac8bb74a30aded6d7fea5c7283c7",
+            "callbackURL": "http://localhost:8080/login/facebook/callback"
         }
     }
 }

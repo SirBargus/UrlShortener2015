@@ -14,7 +14,7 @@ describe('#Base test', function(){
     //Create a user
     before(function(done){
         this.timeout(3000);
-        agent.post('/signup')
+        agent.post(conf.api.signup_local)
             .send({"username": "dummy", "password": "dummy", "rol": "USER"})
             .expect(302, done);
     }),

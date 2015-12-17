@@ -4,6 +4,7 @@
 var LocalStrategy = require('passport-local').Strategy,
     TwitterStrategy = require('passport-twitter').Strategy,
     GoogleStrategy = require('passport-google-oauth2').Strategy,
+    FacebookStrategy = require('passport-facebook').Strategy,
     ddbb = require('../models/shortUrlDB'),
     conf = require('../config/conf.json');
 
@@ -28,7 +29,8 @@ module.exports = function(passport) {
     passport.use('local-signup', new LocalStrategy({
         passReqToCallback: true
     }, function(req, username, password, done) {
-        var json = {"local": {"username": username, "password": password, "rol": req.body.rol}};
+        var json = {"username": username, "password": password, "rol": req.body.rol,
+            "id_": username + "local"};
         ddbb.addUser(json, function(err, res){
             if (err) throw err;
             return done(null, res);
@@ -43,7 +45,7 @@ module.exports = function(passport) {
     }, function(req, username, password, done){
         if (req.body.rol === undefined) req.body.rol = "USER";
         var json = {"username": username, "password": password,
-            "id_": username + "local", "rol": req.body.rol};
+            "id_": username + "local"};
         ddbb.findUser(json, function(err, res){
             if(err || !res) done(err);
             else done(null, res);
@@ -52,6 +54,8 @@ module.exports = function(passport) {
 
     /*
      * Login with Twitter
+     * Bug API and passport-twitter: https://github.com/jaredhanson/passport-linkedin/issues/6
+     * It's work fine, so no problem
      */
     passport.use('twitter', new TwitterStrategy({
         consumerKey: conf.credentials.twitter.consumerKey,
@@ -83,6 +87,28 @@ module.exports = function(passport) {
     }, function(req, token, refreshToken, profile, done) {
         process.nextTick(function(){
             var json = {"username": profile.displayName, "id_": profile.id + "google",
+                "token": token, "rol": "USER"};
+            ddbb.addUser(json, function(err, res){
+                //user exist
+                if (err !== null && err.code === 11000) done(null, res);
+                else{
+                    if(err !== null || !res) done(err);
+                    else done(null, res);
+                }
+            });
+        });
+    }));
+
+    /*
+     * Login with facebook
+     */
+    passport.use('facebook', new FacebookStrategy({
+        clientID: conf.credentials.facebook.clientID,
+        clientSecret: conf.credentials.facebook.clientSecret,
+        callbackURL: conf.credentials.facebook.callbackURL
+    }, function(token, refreshToken, profile, done) {
+        process.nextTick(function() {
+            var json = {"username": profile.displayName, "id_": profile.id + "facebook",
                 "token": token, "rol": "USER"};
             ddbb.addUser(json, function(err, res){
                 //user exist
