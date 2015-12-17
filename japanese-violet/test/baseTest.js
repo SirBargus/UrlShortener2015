@@ -8,14 +8,15 @@ var conf = require('../config/conf'),
 
 var urlTest = "http://google.es";
 var json = "";
+var agent = request.agent(app);
 //Base test
 describe('#Base test', function(){
-    //Creamos el usuario
+    //Create a user
     before(function(done){
-        ddbb.addUser({"username": "dummy", "password": "dummy", "rol": "USUARIO"}, function(err, result){
-            if(err) throw err;
-            else done();
-        });
+        this.timeout(3000);
+        agent.post(conf.api.signup_local)
+            .send({"username": "dummy", "password": "dummy", "rol": "USER"})
+            .expect(302, done);
     }),
     //Is alive
     it('Is server alive?', function(done){
@@ -26,9 +27,8 @@ describe('#Base test', function(){
     //Create a new short url
     it('Create short uri', function(done){
         this.timeout(30000);
-        request(app)
-            .post(conf.api.uri)
-            .send({"urlsource": urlTest, "user": "dummy", "pass": "dummy"})
+        agent.put(conf.api.uri)
+            .send({"urlsource": urlTest})
             .expect(200)
             .end(function(err,res){
                 if (err) throw err;
@@ -36,12 +36,20 @@ describe('#Base test', function(){
                 done();
             })
     }),
+    it('Cant create short uri', function(done){
+        this.timeout(30000);
+        request(app)
+            .put(conf.api.uri)
+            .send({"urlsource": urlTest})
+            .expect(401, done);
+    }),
+    //Get a short url
     it('Get short uri', function(done){
         if (json.urlShort != undefined){
             var url = json.urlShort.substring("http://".length + conf.ip.length +
-                conf.port.length + 1, json.urlShort.length);
+                conf.port.length + 2, json.urlShort.length);
             request(app)
-                .get(url)
+                .get("/" + url)
                 .expect(302)
                 .end(function(err, res){
                     if (err) throw err;
@@ -58,10 +66,9 @@ describe('#Base test', function(){
         ddbb.remove(id, function(err){
             if(err) console.error("Error delete: " + err);
         });
-        //Remove user
-        ddbb.removeUser({"username": "dummy", "password": "dummy"}, function(err){
-            if(err) console.error("Error delete: " + err);
-            else done();
+        ddbb.removeUserLocal({"username": "dummy", "password": "dummy"}, function(err, res){
+            if (err) throw err;
+            else done()
         });
     })
 });
