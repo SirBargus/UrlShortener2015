@@ -132,18 +132,18 @@ function getQr(url, json, res){
                         + conf.api.qr + "/" + json.urlShort;
                     json.urlShort = "http://" + conf.ip + ":" + conf.port
                         + conf.api.uri + "/" + json.urlShort;
-                    if (err || result == {}) res.sendStatus(400);
-                    else res.send(json);
+                    if (err || result == {}) return res.sendStatus(400);
+                    else return res.send(json);
                });
            });
        } else {
            if (conf.log == true) console.error("Error get to google api for qr");
-           res.sendStatus(400);
+           return res.sendStatus(400);
        }
 
     }).on('error', function(e){
         if (conf.log == true) console.error("Got error: " + e.message);
-        res.sendStatus(400);
+        return res.sendStatus(400);
     });
 };
 
@@ -188,8 +188,8 @@ function createQrLocal_(add, json, req, res){
                      + conf.api.qr + "/" + json.urlShort;
                 json.urlShort = "http://" + conf.ip + ":" + conf.port
                      + conf.api.uri + "/" + json.urlShort;
-                if (err || result == {}) res.sendStatus(400);
-                else res.send(json);
+                if (err || result == {}) return res.sendStatus(400);
+                else return res.send(json);
             });
         }
     });

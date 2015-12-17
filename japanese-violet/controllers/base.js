@@ -21,9 +21,9 @@ module.exports = function(app, passport){
             if (err != null && con.log == true) console.error("Error: " + err);
             if (err == null && result != null){
                 //ddbbUri.increase(json,function(err, result){}); //Cambiar por una al probar
-                res.redirect(result.urlSource);
+                return res.redirect(result.urlSource);
             }
-            else res.sendStatus(401);
+            else return res.sendStatus(401);
         });
     }),
     /*
@@ -34,9 +34,9 @@ module.exports = function(app, passport){
         ddbbUri.findByUser(req.params.user, function(err, result){
             if (err != null && con.log == true) console.error("Error: " + err);
             if (err == null && result != []){
-                res.send(result);
+                return res.send(result);
             }
-            else res.sendStatus(401);
+            else return res.sendStatus(401);
         });
     }),
     /**
@@ -67,10 +67,10 @@ module.exports = function(app, passport){
     app.put(conf.api.uri, function(req, res){
         if (conf.log === true) console.log("Input Conex: " + req);
         //Check user is authenticated
-        if (req.user === undefined) res.sendStatus(401);
+        if (req.user === undefined) return res.sendStatus(401);
         //Generate id rom a shortUrl
         var shortUrl_ = shortid.generate();
-        if (req.body.urlsource === undefined) res.sendStatus(401);
+        if (req.body.urlsource === undefined) return res.sendStatus(401);
 
         //Crea el la url
         var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
