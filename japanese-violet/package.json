@@ -44,6 +44,7 @@
     "mocha": "2.3.*",
     "png-js": "0.1.1",
     "qrcode-reader": "0.0.7",
+    "zxing": "0.1.0",
     "should": ">= 0.0.1",
     "supertest": "1.1.0"
   },
