@@ -7,7 +7,8 @@ var conf = require('../config/conf'),
     qrreader = require('qrcode-reader'),
     fs = require('fs'),
     png = require('png-js'),
-    vcardparse = require('vcardparser');
+    vcardparse = require('vcardparser'),
+    http = require('http');
 
 var urlTest = "http://www.nyan.cat";
 var json = '';
@@ -39,19 +40,29 @@ describe('#QR test', function(){
             });
     }),
     it('Qr is correct', function(done){
-        if (json != undefined){
-            //We need save qr, qr-reader modules are shit
-            fs.writeFileSync('test.png', json.qr, 'binary');
-            c = fs.readFileSync('test.png');
-            var p = new png(c);
-            p.decode(function(data){
-                var qrr = new qrreader();
-                qrr.callback = function(result){
-                    result.should.equal(json.urlShort);
-                }
-                qrr.decode(p, data);
-                fs.unlinkSync('test.png');
-                done();
+        this.timeout(30000);
+        if (json !== undefined){
+            http.get(json.urlqr, function(res){
+                var img = '';
+                res.setEncoding('binary');
+
+                res.on('data', function(chunk){
+                    img += chunk;
+                });
+                res.on('end', function(){
+                    fs.writeFileSync('test.png', img, 'binary');
+                    c = fs.readFileSync('test.png');
+                    var p = new png(c);
+                    p.decode(function(data){
+                        var qrr = new qrreader();
+                        qrr.callback = function(result){
+                            result.should.equal(json.urlShort);
+                        }
+                        qrr.decode(p, data);
+                        fs.unlinkSync('test.png');
+                        done();
+                    });
+                });
             });
         }
     }),
@@ -94,9 +105,105 @@ describe('#QR test', function(){
             });
     }),
     it('vCard is correct', function(done){
+        if (json !== undefined){
+            http.get(json.urlqr, function(res){
+                var img = '';
+                res.setEncoding('binary');
+
+                res.on('data', function(chunk){
+                    img += chunk;
+                });
+                res.on('end', function(){
+                    fs.writeFileSync('test.png', img, 'binary');
+                    c = fs.readFileSync('test.png');
+                    var p = new png(c);
+                    p.decode(function(data){
+                        var qrr = new qrreader();
+                        qrr.callback = function(result){
+                            vcardparse.parseString(result, function(err, json_){
+                                if (err === null){
+                                    json_.n.first.should.equal(jsonVcard.vcard.firstName);
+                                    json_.n.last.should.equal(jsonVcard.vcard.lastName);
+                                    json_.photo.value.should.equal(jsonVcard.vcard.photo);
+                                    json_.tel[0].value.should.equal(jsonVcard.vcard.workPhone);
+                                    json_.title.should.equal(jsonVcard.vcard.title);
+                                    json_.org.name.should.equal(jsonVcard.vcard.organization);
+                                    json_.url[0].value.should.equal(json.urlShort);
+                                }
+                            });
+                        }
+                        qrr.decode(p, data);
+                        fs.unlinkSync('test.png');
+                        done();
+                    });
+                });
+            });
+        }
+    }),
+    it('Get QrLocal', function(done){
+        this.timeout(30000);
+        var img = fs.readFileSync('./test/img/logo.png');
+        var jsonlocal = {"urlsource": urlTest, "color":{"r": 137, "g": 127, "b": 38 },
+            "logo": img, "local": "true"};
+        agent.put(conf.api.uri)
+            .send(jsonlocal)
+            .expect(200)
+            .end(function(err, res){
+                json = '';
+                json = res.body;
+                //Add id to delete after all test
+                idDelete.push(json.urlShort.substring("http://".length + conf.ip.length +
+                    conf.port.length + conf.api.uri.length + 1, json.urlShort.length));
+                done();
+            });
+    }),
+    it('Qr local is correct', function(done){
+        this.timeout(30000);
+        if (json !== undefined){
+            http.get(json.urlqr, function(res){
+                var img = '';
+                res.setEncoding('binary');
+
+                res.on('data', function(chunk){
+                    img += chunk;
+                });
+                res.on('end', function(){
+                    fs.writeFileSync('test.png', img, 'binary');
+                    c = fs.readFileSync('test.png');
+                    var p = new png(c);
+                    p.decode(function(data){
+                        var qrr = new qrreader();
+                        qrr.callback = function(result){
+                            result.should.equal(json.urlShort);
+                        }
+                        qrr.decode(p, data);
+                        fs.unlinkSync('test.png');
+                        done();
+                    });
+                });
+            });
+        }
+    }),
+    it('Get QrLocal with vcard', function(done){
+        this.timeout(30000);
+        agent.put(conf.api.uri)
+            .send(jsonVcard)
+            .expect(200)
+            .end(function(err, res){
+                json = '';
+                json = res.body;
+                //Add id to delete after all test
+                idDelete.push(json.urlShort.substring("http://".length + conf.ip.length +
+                    conf.port.length + conf.api.uri.length + 1, json.urlShort.length));
+                done();
+            });
+    }),
+    it('vCard local is correct', function(done){
         if (json != undefined){
+            //Transform the json.qr to buffer
+            var img = new Buffer(json.qr);
             //We need save qr, qr-reader modules are shit
-            fs.writeFileSync('test.png', json.qr, 'binary');
+            fs.writeFileSync('test.png', img, 'binary');
             var c = fs.readFileSync('test.png');
             var p = new png(c);
             p.decode(function(data){
@@ -120,89 +227,6 @@ describe('#QR test', function(){
             });
         }
     }),
-    it('Get QrLocal', function(done){
-        this.timeout(30000);
-        var img = fs.readFileSync('./test/img/logo.png');
-        var jsonlocal = {"urlsource": urlTest, "color":{"r": 137, "g": 127, "b": 38 },
-            "logo": img, "local": "true"};
-        agent.put(conf.api.uri)
-            .send(jsonlocal)
-            .expect(200)
-            .end(function(err, res){
-                json = '';
-                json = res.body;
-                //Add id to delete after all test
-                idDelete.push(json.urlShort.substring("http://".length + conf.ip.length +
-                    conf.port.length + conf.api.uri.length + 1, json.urlShort.length));
-                done();
-            });
-    }),
-    it('Qr local is correct', function(done){
-        this.timeout(30000);
-        if (json != undefined){
-            //Transform the json.qr to buffer
-            var img = new Buffer(json.qr);
-            //We need save qr, qr-reader modules are shit
-            fs.writeFileSync('test.png', img, 'binary');
-            var c = fs.readFileSync('test.png');
-            var p = new png(c);
-            p.decode(function(data){
-                var qrr = new qrreader();
-                qrr.callback = function(result){
-                    result.should.equal(json.urlShort);
-                }
-                qrr.decode(p, data);
-                fs.unlinkSync('test.png');
-                done();
-            });
-        }
-    }),
-    it('Get QrLocal with vcard', function(done){
-        this.timeout(30000);
-        agent.put(conf.api.uri)
-            .send(jsonVcard)
-            .expect(200)
-            .end(function(err, res){
-                json = '';
-                json = res.body;
-                //Add id to delete after all test
-                idDelete.push(json.urlShort.substring("http://".length + conf.ip.length +
-                    conf.port.length + conf.api.uri.length + 1, json.urlShort.length));
-                done();
-            });
-    }),
-    // it('vCard local is correct', function(done){
-    //     if (json != undefined){
-    //         //Transform the json.qr to buffer
-    //         var img = new Buffer(json.qr);
-    //         //We need save qr, qr-reader modules are shit
-    //         fs.writeFileSync('test.png', img, 'binary');
-    //         var c = fs.readFileSync('test.png');
-    //         var p = new png(c);
-    //         p.decode(function(data){
-    //             console.log("3")
-    //             var qrr = new qrreader();
-    //             console.log("4")
-    //             qrr.callback = function(result){
-    //                 vcardparse.parseString(result, function(err, json_){
-    //                     console.log(err);
-    //                     if (err == null){
-    //                         json_.n.first.should.equal(jsonVcard.firstName);
-    //                         json_.n.last.should.equal(jsonVcard.lastName);
-    //                         json_.photo.value.should.equal(jsonVcard.photo);
-    //                         json_.tel[0].value.should.equal(jsonVcard.workPhone);
-    //                         json_.title.should.equal(jsonVcard.title);
-    //                         json_.org.name.should.equal(jsonVcard.organization);
-    //                         json_.url[0].value.should.equal(json.urlShort);
-    //                     }
-    //                 });
-    //             }
-    //             qrr.decode(p, data);
-    //             fs.unlinkSync('test.png');
-    //             done();
-    //         });
-    //     }
-    // }),
     after(function(done){
         for(var i in idDelete){
             ddbb.remove(idDelete[i], function(err){

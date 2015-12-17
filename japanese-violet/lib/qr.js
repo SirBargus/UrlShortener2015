@@ -19,12 +19,12 @@ module.exports = {
      */
     createQrOnline: function(req, res){
         //Level of error
-        if (req.body.err == true) ext = conf.exter.qrErr + req.body.errLevel + "&chl=";
+        if (req.body.err === true) ext = conf.exter.qrErr + req.body.errLevel + "&chl=";
         else ext = conf.extern.qr;
 
         var shortUrl_ = shortid.generate();
         var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_};
         //Get QR imagec
         getQr(ext + urlShortComplete, json, res);
     },
@@ -48,11 +48,11 @@ module.exports = {
      */
     createQrOnlineVcard: function(req, res){
         //Level of error
-        if (req.body.err == true) ext = conf.exter.qrErr + req.body.errLevel + "&chl=";
+        if (req.body.err === true) ext = conf.exter.qrErr + req.body.errLevel + "&chl=";
         else ext = conf.extern.qr;
 
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_};
         var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
         var vcard = createVcard(req.body.vcard, urlShortComplete);
 
@@ -76,7 +76,7 @@ module.exports = {
      */
     createQrLocal: function(req,res){
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_};
         var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
 
         createQrLocal_(urlShortComplete, json, req, res);
@@ -107,7 +107,7 @@ module.exports = {
      */
     createQrLocalVcard: function(req,res){
         var shortUrl_ = shortid.generate();
-        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_};
+        var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_};
         var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
 
         var vcard = createVcard(req.body.vcard, urlShortComplete);
@@ -119,14 +119,15 @@ module.exports = {
 //Get qr from google service
 function getQr(url, json, res){
     http.get(url, function(response){
-       if (response.statusCode == 200){
+       if (response.statusCode === 200){
            var img = '';
            response.setEncoding('binary');
            //Get the image
            response.on('data', function(chunk){img += chunk;});
            //Finish img
            response.on('end', function(){
-               json.qr = img;
+               //We transform png to buffer to save, mongo doesn't do it well
+               json.qr = new Buffer(img, 'binary');
                ddbbUri.add(json, function(err, result){
                     json.urlqr = "http://" + conf.ip + ":" + conf.port
                         + conf.api.qr + "/" + json.urlShort;
@@ -137,12 +138,12 @@ function getQr(url, json, res){
                });
            });
        } else {
-           if (conf.log == true) console.error("Error get to google api for qr");
+           if (conf.log === true) console.error("Error get to google api for qr");
            return res.sendStatus(400);
        }
 
     }).on('error', function(e){
-        if (conf.log == true) console.error("Got error: " + e.message);
+        if (conf.log === true) console.error("Got error: " + e.message);
         return res.sendStatus(400);
     });
 };
@@ -171,24 +172,26 @@ function createQrLocal_(add, json, req, res){
     var errLevel = {"L": "minium", "M": "medium","Q": "high", "H":"max"};
     var opt = {};
     //Create options for qr.save
-    if (req.body.color != undefined){
-        if (req.body.color.r != undefined) opt.r = req.body.color.r;
-        if (req.body.color.g != undefined) opt.g = req.body.color.g;
-        if (req.body.color.b != undefined) opt.b = req.body.color.b;
+    if (req.body.color !== undefined){
+        if (req.body.color.r !== undefined) opt.r = req.body.color.r;
+        if (req.body.color.g !== undefined) opt.g = req.body.color.g;
+        if (req.body.color.b !== undefined) opt.b = req.body.color.b;
     }
-    if (req.body.errLevel != undefined) opt.err = errLevel[req.body.errLevel];
-    if(req.body.logo != undefined) opt.logo = new Buffer(req.body.logo);
+    if (req.body.errLevel !== undefined) opt.err = errLevel[req.body.errLevel];
+    //Logo from compani
+    if(req.body.logo !== undefined) opt.logo = new Buffer(req.body.logo);
 
     qr.save(add, opt, function(err, buf){
         if (err) res.sendStatus(400);
         else {
+            //We transform png to buffer to save, mongo doesn't do it well
+            json.qr = new Buffer(buf);
             ddbbUri.add(json, function(err, result){
-                json.qr = buf;
                 json.urlqr = "http://" + conf.ip + ":" + conf.port
                      + conf.api.qr + "/" + json.urlShort;
                 json.urlShort = "http://" + conf.ip + ":" + conf.port
                      + conf.api.uri + "/" + json.urlShort;
-                if (err || result == {}) return res.sendStatus(400);
+                if (err || result === {}) return res.sendStatus(400);
                 else return res.send(json);
             });
         }
