@@ -45,7 +45,7 @@ module.exports = function(passport) {
     }, function(req, username, password, done){
         if (req.body.rol === undefined) req.body.rol = "USER";
         var json = {"username": username, "password": password,
-            "id_": username + "local"};
+            "id_": username + "local", "rol": req.body.rol};
         ddbb.findUser(json, function(err, res){
             if(err || !res) done(err);
             else done(null, res);
