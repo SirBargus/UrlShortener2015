@@ -76,7 +76,8 @@ module.exports = function(app, passport){
     /*
      * Get the shorturi and return a qr
      */
-    app.get('/qr/:id', function(req, res_){
+    app.get(conf.api.qr + '/:id', function(req, res_){
+        if (conf.log === true) console.log("Input Conex: " + req);
         ddbbUri.find(req.params.id, function(err, result){
             if (err != null && con.log == true) console.error("Error: " + err);
             if (err == null && result != null){
@@ -87,7 +88,25 @@ module.exports = function(app, passport){
             }
             else return res_.sendStatus(401);
         });
-    })
+    }),
+    /*
+     * Delete a URI
+     */
+    app.delete(conf.api.uri + '/:id', function(req, res){
+        if (conf.log === true) console.log("Input Conex: " + req);
+        if (req.user === undefined) return res.sendStatus(401);
+        if (req.user.rol === "ADMIN"){
+            ddbbUri.remove(req.params.id, function(err){
+                if (err) return res.sendStatus(401);
+                else return res.sendStatus(200);
+            });
+        } else {
+            ddbbUri.removeByUser({"urlShort": req.params.id, "user": req.user.id_}, function(err){
+                if (err) return res.sendStatus(401);
+                else return res.sendStatus(200);
+            });
+        }
+    });
 }
 
 function qr_(req, res){
