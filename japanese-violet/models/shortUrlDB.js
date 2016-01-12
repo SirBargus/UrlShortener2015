@@ -57,6 +57,11 @@ module.exports = {
             callback(err);
         });
     },
+    removeByUser: function(id, callback){
+        uri.remove({"urlShort": id.urlShort, "user": id.user}, function(err){
+            callback(err);
+        });
+    },
     //Busca por URI
     find: function(urlShort, callback){
         uri.findOne({"urlShort": urlShort}, function(err, res){
@@ -80,7 +85,6 @@ module.exports = {
             callback(err, res);
         });
     },
-
     /****  USER SCHEMA  ****/
     //Añadir usuario
     addUser: function(add, callback){

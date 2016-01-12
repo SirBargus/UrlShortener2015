@@ -58,14 +58,17 @@ describe('#Base test', function(){
                 });
         }
     }),
+    it('Delete Uri', function(done){
+        if (json.urlShort != undefined){
+            var url = json.urlShort.substring("http://".length + conf.ip.length +
+                conf.port.length + 2 + conf.api.uri.length, json.urlShort.length);
+            agent.delete(conf.api.uri + "/" + url)
+                .expect(200, done);
+        }
+    }),
     //Delete database's info
     after(function(done){
         //Take id from uri
-        var id = json.urlShort.substring("http://".length + conf.ip.length +
-            conf.port.length + conf.api.uri.length + 2, json.urlShort.length);
-        ddbb.remove(id, function(err){
-            if(err) console.error("Error delete: " + err);
-        });
         ddbb.removeUserLocal({"username": "dummy", "password": "dummy"}, function(err, res){
             if (err) throw err;
             else done()
