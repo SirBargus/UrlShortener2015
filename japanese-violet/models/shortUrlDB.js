@@ -16,15 +16,15 @@ var uriSchema = new mongoose.Schema({
     user: {type: String, require: true},
     statistics:{
         total:  {type: Number, default:0},
+        //Datos del usuario que la crea
         date:{type: String, default:"0"},
         browser:{type: String},
         ip:     {type: String},
         country:{type: String},
-        city:   {type: String},
-        //date,browser,ip,country,city
-        click:[String,String,String,String,String]
+        city:   {type: String}
     }
 });
+
 var userSchema = new mongoose.Schema({
     username: String,
     password: String,
@@ -33,8 +33,18 @@ var userSchema = new mongoose.Schema({
     token: String
 });
 
+var clickSchema = new mongoose.Schema({
+    urlShort: {type: String, require: true},
+    date:{type: String, default:"0"},
+    browser:{type: String},
+    ip:     {type: String},
+    country:{type: String},
+    city:   {type: String}
+});
+
 var uri = mongoose.model('uri', uriSchema);
 var user = mongoose.model('user',userSchema);
+var click = mongoose.model('click',clickSchema);
 
 mongoose.connect('mongodb://' + conf.ddbb.url, function(err){
     if (err) throw err;
