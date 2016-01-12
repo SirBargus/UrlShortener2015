@@ -5,7 +5,8 @@ var ddbbUri = require('../models/shortUrlDB.js'),
     qr = require('../lib/fancyqr.js'),
     http = require('http'),
     vCard = require('vcards-js'),
-    urlencode = require('urlencode');
+    urlencode = require('urlencode'),
+    geoip = require ('geoip-lite');
 
 // File with only server's methods
 module.exports = function(app, passport){
@@ -20,19 +21,21 @@ module.exports = function(app, passport){
     app.get(conf.api.uri + "/:shortUrl", function(req, res){
         if (conf.log == true) console.log("Input Conex: " + req);
         //geoip is synchronous
+        console.log("Entrando a URI");
         var geo = geoip.lookup(req.body.ip,function(){
-                var json = {"urlShort": req.params.shortUrl, "date": new Date(),
-                    "browser": req.body.browser, "ip": req.body.ip, "country": geo.country,
-                    "city": geo.city};
-                //req.param is deprecated, cant use string to access information
-                ddbbUri.find(req.params.shortUrl, function(err, result){
-                    if (err != null && con.log == true) console.error("Error: " + err);
-                    if (err == null && result != null){
-                        res.redirect(result.urlSource);
-                    }
-                    else res.sendStatus(401);
-                });
+            console.log();
+            var json = {"urlShort": req.params.shortUrl, "date": new Date(),
+                "browser": req.body.browser, "ip": req.body.ip, "country": geo.country,
+                "city": geo.city};
+            //req.param is deprecated, cant use string to access information
+            ddbbUri.click(req.params.shortUrl,json,function(err, result){
+                if (err != null && conf.log == true) console.error("Error: " + err);
+                if (err == null && result != null){
+                    res.redirect(result.urlSource);
+                }
+                else res.sendStatus(401);
             });
+        });
     }),
     /*
      * Get all uris create by an User
@@ -40,7 +43,7 @@ module.exports = function(app, passport){
     app.get(conf.api.uriUser + "/:user", function(req, res){
         if (conf.log == true) console.log("Input Conex: " + req);
         ddbbUri.findByUser(req.params.user, function(err, result){
-            if (err != null && con.log == true) console.error("Error: " + err);
+            if (err != null && conf.log == true) console.error("Error: " + err);
             if (err == null && result != []){
                 return res.send(result);
             }
@@ -84,7 +87,7 @@ module.exports = function(app, passport){
     app.get(conf.api.qr + '/:id', function(req, res_){
         if (conf.log === true) console.log("Input Conex: " + req);
         ddbbUri.find(req.params.id, function(err, result){
-            if (err != null && con.log == true) console.error("Error: " + err);
+            if (err != null && conf.log == true) console.error("Error: " + err);
             if (err == null && result != null){
                 //Send image to show into an user
                 res_.writeHead(200, {'Content-Type': 'image/png' });
@@ -113,6 +116,7 @@ module.exports = function(app, passport){
         }
     });
 }
+
 
 function qr_(req, res){
     //Level of error

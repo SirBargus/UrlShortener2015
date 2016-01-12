@@ -52,7 +52,7 @@ mongoose.connect('mongodb://' + conf.ddbb.url, function(err){
 //Funciones de la BBDD
 //Si hay problemas de rendimiento, exportar funcion a funcion
 module.exports = {
-    /****   URI SCHEMA  ****/
+    /****   URI SCHEMA ****/
     //Crea URI
     /** Eliminar error de  pass **/
     add: function(add, callback){
@@ -67,31 +67,33 @@ module.exports = {
             callback(err);
         });
     },
+    //Borra por usuario
     removeByUser: function(id, callback){
         uri.remove({"urlShort": id.urlShort, "user": id.user}, function(err){
             callback(err);
         });
     },
-    //Busca por URI
-    find: function(urlShort, callback){
+    //Encuentra y añade estadisticas
+    click: function(urlShort,data, callback){
         uri.findOne({"urlShort": urlShort}, function(err, res){
             res.statistics.total= res.statistics.total + 1;
             res.statistics.save();
+            callback(err, res);
+        });
+        var newClick = new click(data);
+        newClick.save(function(err){
+            err(callback, newClick)
+        });
+    },
+    //Busca por URI
+    find: function(urlShort, callback){
+        uri.findOne({"urlShort": urlShort}, function(err, res){
             callback(err, res);
         });
     },
     //Busca por usuario
     findByUser: function(users, callback){
         uri.find({"user": users}, function(err, res){
-            callback(err, res);
-        });
-    },
-    //Incrementa en uno el nº de clicks
-    /***  añadir ip y navegador   ***/
-    increase: function(click,callback){
-        uri.findOne({"urlShort": click.urlShort},function(err, res){
-            res.statistics.click.count = res.statistics.click.count + 1;
-            res.statistics.save();
             callback(err, res);
         });
     },
