@@ -6,7 +6,7 @@ var ddbbUri = require('../models/shortUrlDB.js'),
     http = require('http'),
     vCard = require('vcards-js'),
     urlencode = require('urlencode'),
-    geoip = require ('geoip-lite');
+    geoip = require('geoip-lite');
 
 // File with only server's methods
 module.exports = function(app, passport){
@@ -22,11 +22,12 @@ module.exports = function(app, passport){
         if (conf.log == true) console.log("Input Conex: " + req);
         //geoip is synchronous
         console.log("Entrando a URI");
-        var geo = geoip.lookup(req.body.ip,function(){
-            console.log();
+        var geo = geoip.lookup(req.query.ip);
+        if (geo != null){
             var json = {"urlShort": req.params.shortUrl, "date": new Date(),
-                "browser": req.body.browser, "ip": req.body.ip, "country": geo.country,
-                "city": geo.city};
+                "browser": req.query.browser, "ip": req.query.ip, "country": geo.country.toString(),
+                "city": geo.city.toString()};
+            console.log(json);
             //req.param is deprecated, cant use string to access information
             ddbbUri.click(req.params.shortUrl,json,function(err, result){
                 if (err != null && conf.log == true) console.error("Error: " + err);
@@ -35,7 +36,10 @@ module.exports = function(app, passport){
                 }
                 else res.sendStatus(401);
             });
-        });
+        }else{
+            res.sendStatus(401);
+        }
+
     }),
     /*
      * Get all uris create by an User

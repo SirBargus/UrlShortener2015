@@ -71,7 +71,7 @@ describe('#QR test', function(){
         var id = json.urlShort.substring("http://".length + conf.ip.length +
             conf.port.length + conf.api.uri.length + 1, json.urlShort.length);
         request(app)
-            .get(conf.api.uri + id)
+            .get(conf.api.uri + id +"?ip=83.138.246.86&browser=Safari")
             .expect(302)
             .end(function(err, res){
                 if(err) throw err;

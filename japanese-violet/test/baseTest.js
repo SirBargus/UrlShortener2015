@@ -46,11 +46,11 @@ describe('#Base test', function(){
     //Get a short url
     it('Get short uri', function(done){
         if (json.urlShort != undefined){
+
             var url = json.urlShort.substring("http://".length + conf.ip.length +
                 conf.port.length + 2, json.urlShort.length);
             request(app)
-                .get("/" + url)
-                .send({"ip":"83.138.246.86","browser":"Chrome"})
+                .get("/" + url+"?ip=83.138.246.86&browser=Chrome")
                 .expect(302)
                 .end(function(err, res){
                     if (err) throw err;

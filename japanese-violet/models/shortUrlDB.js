@@ -78,12 +78,13 @@ module.exports = {
         uri.findOne({"urlShort": urlShort}, function(err, res){
             res.statistics.total= res.statistics.total + 1;
             res.statistics.save();
+            var newClick = new click(data);
+            newClick.save(function(err){
+                err(callback, newClick);
+            });
             callback(err, res);
         });
-        var newClick = new click(data);
-        newClick.save(function(err){
-            err(callback, newClick)
-        });
+
     },
     //Busca por URI
     find: function(urlShort, callback){
