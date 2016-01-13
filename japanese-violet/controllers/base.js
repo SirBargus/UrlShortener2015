@@ -82,6 +82,7 @@ module.exports = function(app, passport){
         if (req.user === undefined) return res.sendStatus(401);
         checkUrl(req.body.urlsource);
         qr_(req, res);
+
     }),
     /*
      * Get the shorturi and return a qr

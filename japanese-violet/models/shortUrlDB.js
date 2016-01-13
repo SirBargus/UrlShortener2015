@@ -126,16 +126,12 @@ module.exports = {
         });
     },
 
-    checkUrl: function(url,status,code, callback){
-      uri.update({"urlSource": url},{"secure":status, "error":code}, function(err, res){
-        console.log(res);
-          callback(err, res);
-      });
+    checkUrl: function(url, status, code, callback){
+      uri.update({"urlSource": url}, {$set: {"secure": status, "error" :code}}, callback);   
     },
 
-    isSecure: function(url, callback){
-      uri.findOne({"urlSource": url}, function(err, res){
-        console.log(res);
+    isSecure: function(urls, callback){
+      uri.findOne({"urlSource": urls}, function(err, res){
           callback(err, res);
       });
     }
