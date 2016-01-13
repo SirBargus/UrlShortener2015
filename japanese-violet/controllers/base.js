@@ -82,7 +82,6 @@ module.exports = function(app, passport){
         //Check user is authenticated
         if (req.user === undefined) return res.sendStatus(401);
         qr_(req, res);
-        console.log(res);
     }),
     /*
      * Get the shorturi and return a qr
@@ -125,10 +124,20 @@ function qr_(req, res){
     //Level of error
     if (req.body.err === true) ext = conf.exter.qrErr + req.body.errLevel + "&chl=";
     else ext = conf.extern.qr;
-
+    var geo = geoip.lookup(req.body.ip);
+    if (geo == null){
+        req.body.ip="undefined";
+        req.body.country="undefined";
+        req.body.city="undefined";
+    }else{
+        req.body.country = geo.country;
+        req.body.city = geo.city;
+    }
     var shortUrl_ = shortid.generate();
     var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
-    var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_};
+    var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_,"statistics.date":new Date(),
+        "statistics.ip": req.body.ip, "statistics.country": req.body.country, "statistics.city":req.body.city,
+        "statistics.browser": req.body.browser};
     if (req.body.local === "true"){
         if (req.body.vcard === undefined) createQrLocal_(urlShortComplete, json, req, res);
         else{

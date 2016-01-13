@@ -42,29 +42,24 @@
      it('Check that the statistics are generated', function(done){
          this.timeout(30000);
          agent
-             .get(conf.api.uri + "/6"+"?ip=83.138.246.86&browser=Chrome")
-             .expect(302)
+             .put(conf.api.uri)
+             .send({"urlSource":urlTest})
+             .expect(200)
              .end(function (err1, res1){
                  agent
-                     .get(conf.api.uri + "/2"+"+")
+                     .get(conf.api.uri + res1.body.urlShort +"+")
                      .end(function (err2, res2){
                          if(err2) throw err;
-
-
+                         if(res2.body[0].statistics.ip = "83.138.246.86") done();
+                         else throw err
                  })
 
 
              })
-         request(app)
-             .get(conf.api.uriUser + "/dummy2")
-             .expect(200)
-             .end(function(err,res){
-                 if(err) throw err;
-                 if((res.body[0].statistics.total == 0)) done();
-             });
+
      }),
 
-         it('Check that the click count increase', function(done){
+     it('Check that the click count increase', function(done){
          this.timeout(30000);
          request(app)
              .get(conf.api.uri + "/2"+"?ip=83.138.246.86&browser=Chrome")
