@@ -50,6 +50,7 @@ describe('#Base test', function(){
                 conf.port.length + 2, json.urlShort.length);
             request(app)
                 .get("/" + url)
+                .send({"ip":"83.138.246.86","browser":"Chrome"})
                 .expect(302)
                 .end(function(err, res){
                     if (err) throw err;
