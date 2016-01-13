@@ -127,13 +127,15 @@ module.exports = {
     },
 
     checkUrl: function(url,status,code, callback){
-      uri.update({"url": url},{"secure":status, "error":code}, function(err, res){
+      uri.update({"urlSource": url},{"secure":status, "error":code}, function(err, res){
+        console.log(res);
           callback(err, res);
       });
     },
 
     isSecure: function(url, callback){
-      uri.findOne({"url": url}, function(err, res){
+      uri.findOne({"urlSource": url}, function(err, res){
+        console.log(res);
           callback(err, res);
       });
     }
