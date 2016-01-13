@@ -2,53 +2,53 @@ var angular = angular.module('app-web', ['ngRoute', 'ngCookies', 'ui.bootstrap']
 
 //Constantes
 var addr = "http://localhost:8080";
-var views = "pages/";
-var Busqueda = "";
+var pages = "pages/";
+//var Busqueda = "";
 
 angular.config(function($routeProvider){
     $routeProvider
         .when("/", {
-            templateUrl: views + "dashboard.html",
-            //controller: "DashController"
+            //controller: "DashController",
+            templateUrl: pages + "dashboard.html"
         })
 
         .when("/blank", {
-            templateUrl: views + "blank.html",
-            //controller: "LogInController"
+            //controller: "LogInController",
+            templateUrl: pages + "blank.html"
         })
         .when("/flot", {
-            templateUrl: views + "flot.html",
-            //controller: "PerfilController"
+            //controller: "PerfilController",
+            templateUrl: pages + "flot.html"
         })
         .when("/forms", {
-            templateUrl: views + "buscar.html",
             //controller: "BuscarController"
+            templateUrl: pages + "buscar.html"
         })
 
         .when("/grid", {
-            templateUrl: views + "comparar.html",
-            //controller: "CompararController"
+            //controller: "CompararController",
+            templateUrl: pages + "comparar.html"
         })
 
         .when("/icons", {
-            templateUrl: views + "cesta.html",
             //controller: "MuestraCestaController",
+            templateUrl: pages + "cesta.html"
         })
 
         .when("/morris", {
-            templateUrl: views + "morris.html"
+            templateUrl: pages + "morris.html"
         })
         .when("/notifications", {
-            templateUrl: views + "notifications.html"
+            templateUrl: pages + "notifications.html"
         })
         .when("/panels", {
-            templateUrl: views + "panels-wells.html"
+            templateUrl: pages + "panels-wells.html"
         })
         .when("/tables", {
-            templateUrl: views + "tables.html"
+            templateUrl: pages + "tables.html"
         })
         .when("/typography", {
-            templateUrl: views + "typogra.html"
+            templateUrl: pages + "typogra.html"
         })
         .otherwise({ redirectTo: "/" });
 });
