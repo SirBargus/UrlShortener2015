@@ -79,6 +79,7 @@ module.exports = function(app, passport){
         if (conf.log === true) console.log("Input Conex: " + req);
         //Check user is authenticated
         if (req.user === undefined) return res.sendStatus(401);
+        checkUrl(req.body.urlsource);
         qr_(req, res);
     }),
     /*
@@ -222,4 +223,23 @@ function createQrLocal_(add, json, req, res){
             });
         }
     });
+}
+
+function checkUrl(url){
+  console.log(url);
+  var peticion = "https://sb-ssl.google.com/safebrowsing/api/lookup?client=demo-app&key=AIzaSyBKHshf7mGT2-aV_0NH49S8PrIBIecE6hE&appver=1.5.2&pver=3.1&url="+url;
+  http.get(url, function(response){
+    console.log("Checking");
+     if (response.statusCode === 200){
+       console.log("Me respondio");
+       if(response.body === "ok" ){
+         return true;
+       }else{
+         return false;
+       }
+     }else{
+       //Not checking
+       console.log("Fallo en peticion");
+     }
+   })
 }
