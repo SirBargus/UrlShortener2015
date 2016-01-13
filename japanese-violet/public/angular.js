@@ -5,7 +5,7 @@ var addr = "http://localhost:8080";
 var views = "pages/";
 var Busqueda = "";
 
-app.config(function($routeProvider){
+angular.config(function($routeProvider){
     $routeProvider
         .when("/", {
             templateUrl: views + "dashboard.html",
@@ -52,3 +52,21 @@ app.config(function($routeProvider){
         })
         .otherwise({ redirectTo: "/" });
 });
+
+//angular.controller("IndexController", ['$scope','$route',"$cookies", '$cookieStore','$location', function($scope,$route, $cookies,$cookieStore,$location){
+//    $scope.user = {};
+//    $scope.user.username = $cookies.get('username');
+//    $route.reload();
+//
+//
+//    //Función que comprueba si un usuario esta logead
+//    $scope.notLogged = function() {
+//        return angular.isUndefined($scope.user.username);
+//    };
+//
+//    //Deslogeamos al usuario
+//    $scope.logOut = function(){
+//        $cookies.remove("username");
+//        $scope.user.username= undefined;
+//    };
+//}]);

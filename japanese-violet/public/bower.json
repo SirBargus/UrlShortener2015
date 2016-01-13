@@ -3,9 +3,9 @@
   "version": "1.0.7",
   "homepage": "http://startbootstrap.com/template-overviews/sb-admin-2/",
   "authors": [
-    "David Miller"
+    "Naxsel"
   ],
-  "description": "A free, open source, Bootstrap admin theme created by Start Bootstrap",
+  "description": "Modified startbootstrap-sb-admin-2 with AngularJS",
   "keywords": [
     "bootstrap",
     "theme"
@@ -23,7 +23,8 @@
   ],
   "main": [
     "dist/css/sb-admin-2.css",
-    "dist/js/sb-admin-2.js"
+    "dist/js/sb-admin-2.js",
+    "angular.js"
   ],
   "dependencies": {
     "bootstrap": "~3.3.6",
