@@ -135,9 +135,8 @@ function qr_(req, res){
     }
     var shortUrl_ = shortid.generate();
     var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
-    var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_,"statistics.date":new Date(),
-        "statistics.ip": req.body.ip, "statistics.country": req.body.country, "statistics.city":req.body.city,
-        "statistics.browser": req.body.browser};
+    var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_,"statistics":{"date":new Date(),
+        "ip":req.body.ip, "country":req.body.country, "city":req.body.city, "browser":req.body.browser}};
     if (req.body.local === "true"){
         if (req.body.vcard === undefined) createQrLocal_(urlShortComplete, json, req, res);
         else{
