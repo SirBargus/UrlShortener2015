@@ -133,6 +133,9 @@ function qr_(req, res){
         req.body.country = geo.country;
         req.body.city = geo.city;
     }
+    if (req.body.browser == null){
+        req.body.browser = "undefined";
+    }
     var shortUrl_ = shortid.generate();
     var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
     var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_,"statistics":{"date":new Date(),
@@ -148,6 +151,7 @@ function qr_(req, res){
         else {
             var vcard = createVcard(req.body.vcard, urlShortComplete);
             //Create qR
+            console.log("pepito")
             getQr(ext + urlencode(vcard.getFormattedString()), json, res);
         }
     }

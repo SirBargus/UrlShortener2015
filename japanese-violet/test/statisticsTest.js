@@ -43,14 +43,16 @@
          this.timeout(30000);
          agent
              .put(conf.api.uri)
-             .send({"urlSource":urlTest})
+             .send({"urlSource":urlTest,"user":"dummy"})
              .expect(200)
              .end(function (err1, res1){
+                 console.log(res1.status);
                  agent
                      .get(conf.api.uri + res1.body.urlShort +"+")
                      .end(function (err2, res2){
+                         //console.log(res2.body)
                          if(err2) throw err;
-                         if(res2.body[0].statistics.ip = "83.138.246.86") done();
+                         if(res2.body[0].statistics.ip == "83.138.246.86") done();
                          else throw err
                  })
 
