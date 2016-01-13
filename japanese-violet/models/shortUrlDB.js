@@ -14,6 +14,8 @@ var uriSchema = new mongoose.Schema({
     urlShort:   {type: String, require: true, unique: true},
     qr: Buffer,
     user: {type: String, require: true},
+    secure: {type: Boolean},
+    error: {type: String},
     statistics:{
         total:  {type: Number, default:0},
         //Datos del usuario que la crea
@@ -122,5 +124,11 @@ module.exports = {
         user.findById(id, function(err, user) {
             callback(err, user);
         });
+    },
+
+    checkUrl: function(url,status,code, callback){
+      uri.findOne({"urlShort": urlShort}, function(err, res){
+          callback(err, res);
+      });
     }
 };
