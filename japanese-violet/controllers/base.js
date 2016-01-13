@@ -82,6 +82,7 @@ module.exports = function(app, passport){
         //Check user is authenticated
         if (req.user === undefined) return res.sendStatus(401);
         qr_(req, res);
+        console.log(res);
     }),
     /*
      * Get the shorturi and return a qr

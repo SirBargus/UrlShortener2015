@@ -28,7 +28,43 @@
          });
      }),
 
-     it('Check that the click count increase', function(done){
+     it('Check that the click count is generated to 0', function(done){
+         this.timeout(30000);
+         request(app)
+             .get(conf.api.uriUser + "/dummy2")
+             .expect(200)
+             .end(function(err,res){
+                 if(err) throw err;
+                 if((res.body[0].statistics.total == 0)) done();
+             });
+     }),
+
+     it('Check that the statistics are generated', function(done){
+         this.timeout(30000);
+         agent
+             .get(conf.api.uri + "/6"+"?ip=83.138.246.86&browser=Chrome")
+             .expect(302)
+             .end(function (err1, res1){
+                 agent
+                     .get(conf.api.uri + "/2"+"+")
+                     .end(function (err2, res2){
+                         if(err2) throw err;
+
+
+                 })
+
+
+             })
+         request(app)
+             .get(conf.api.uriUser + "/dummy2")
+             .expect(200)
+             .end(function(err,res){
+                 if(err) throw err;
+                 if((res.body[0].statistics.total == 0)) done();
+             });
+     }),
+
+         it('Check that the click count increase', function(done){
          this.timeout(30000);
          request(app)
              .get(conf.api.uri + "/2"+"?ip=83.138.246.86&browser=Chrome")
@@ -36,25 +72,16 @@
              request(app)
                  .get(conf.api.uriUser + "/dummy")
                  .expect(200)
-                 .end(function(err,res){
-                     if(err) throw err;
-                     if((res.body[0].statistics.total == 1)) done();
+                 .end(function(err1,res){
+                     if(err1) throw err;
+                     if(res.body[0].statistics.total == 1) done();
                      else throw err;
                  });
          });
      }),
 
-     //it('Check that the click count is generated to 0', function(done){
-     //    this.timeout(30000);
-     //    request(app)
-     //        .get(conf.api.uriUser + "/dummy2")
-     //        .expect(200)
-     //        .end(function(err,res){
-     //            if(err) throw err;
-     //            if((res.body[0].statistics.total == 0)) done();
-     //        });
-     //}),
-     //
+
+
      //it('Check that the date is older and well formatted', function(done){
      //   this.timeout(30000);
      //    request(app)

@@ -24,24 +24,32 @@ module.exports = function(app){
     //Los dos siguientes gets, se diferencian por angular
     //get statistics in json
     app.get(conf.api.uri + "/:shortUrl" + "+.json", function(req, res){
-        getJson (req,res);
+        if (conf.log == true) console.log("Input Conex: " + req);
+        //req.param is deprecated, cant use string to access information
+        ddbbUri.findOne(req.params.shortUrl, function(err, result){
+            if (err != null && con.log == true) console.error("Error: " + err);
+            if (err == null && result != null){
+                res.json(result);
+            }
+            else res.sendStatus(401);
+        });
     }),
 
     //get statistics in html
     app.get(conf.api.uri + "/:shortUrl" + "+.html", function(req, res){
-        getJson (req,res);
+        if (conf.log == true) console.log("Input Conex: " + req);
+        //req.param is deprecated, cant use string to access information
+        ddbbUri.findOne(req.params.shortUrl, function(err, result){
+            if (err != null && con.log == true) console.error("Error: " + err);
+            if (err == null && result != null){
+                res.send(htmlHeader+result.toString+htmlEnd);
+                res.json(result);
+            }
+            else res.sendStatus(401);
+        });
     })
 
 }
 
-function getJson(req, res){
-    if (conf.log == true) console.log("Input Conex: " + req);
-    //req.param is deprecated, cant use string to access information
-    ddbbUri.findOne(req.params.shortUrl, function(err, result){
-        if (err != null && con.log == true) console.error("Error: " + err);
-        if (err == null && result != null){
-            res.json(result);
-        }
-        else res.sendStatus(401);
-    });
-}
+var htmlHeader = "<html><title>HTML</title><body>";
+var htmlEnd = "</body></html>";
