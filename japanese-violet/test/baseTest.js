@@ -36,6 +36,13 @@ describe('#Base test', function(){
                 done();
             })
     }),
+
+    it('Uri is secure?', function(done){
+        this.timeout(30000);
+        ddbb.isSecure.secure
+        .expect(true,done);
+    }),
+    
     it('Cant create short uri', function(done){
         this.timeout(30000);
         request(app)

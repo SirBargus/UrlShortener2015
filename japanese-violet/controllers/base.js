@@ -80,7 +80,7 @@ module.exports = function(app, passport){
         if (conf.log === true) console.log("Input Conex: " + req);
         //Check user is authenticated
         if (req.user === undefined) return res.sendStatus(401);
-        console.log(checkUrl(req.body.urlsource));
+        checkUrl(req.body.urlsource);
         qr_(req, res);
     }),
     /*
@@ -231,21 +231,27 @@ function checkUrl(url){
   https.get(peticion, function(response){
      if (response.statusCode === 200){
        //No es segura;
-       return {'status':response.statusCode};
+       ddbbUri.checkUrl(url,false,response.body);
+       return false;
      }else if(response.statusCode === 204){
        //Es segura;
-       return {'status':response.statusCode};
+       ddbbUri.checkUrl(url,true,"");
+       return  true;
      }else if(response.statusCode === 400){
+       ddbbUri.checkUrl(url,false,"Bad");
        //Url Mal formada
-       return {'status':response.statusCode};
+       return false;
      }else if(response.statusCode === 503){
+       ddbbUri.checkUrl(url,false,"Error");
        //Servicio no disponible
-       return {'status':response.statusCode};
+       return false;
      }else if(response.statusCode === 401){
+       ddbbUri.checkUrl(url,false,"Error");
        //Api key invalida
-       return {'status':response.statusCode};
+       return false;
      }else{
        //Fallo en peticion
+       return false;
      }
 
    })

@@ -127,7 +127,13 @@ module.exports = {
     },
 
     checkUrl: function(url,status,code, callback){
-      uri.findOne({"urlShort": urlShort}, function(err, res){
+      uri.update({"url": url},{"secure":status, "error":code}, function(err, res){
+          callback(err, res);
+      });
+    },
+
+    isSecure: function(url, callback){
+      uri.findOne({"url": url}, function(err, res){
           callback(err, res);
       });
     }
