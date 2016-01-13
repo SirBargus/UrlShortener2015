@@ -21,13 +21,11 @@ module.exports = function(app, passport){
     app.get(conf.api.uri + "/:shortUrl", function(req, res){
         if (conf.log == true) console.log("Input Conex: " + req);
         //geoip is synchronous
-        console.log("Entrando a URI");
         var geo = geoip.lookup(req.query.ip);
         if (geo != null){
             var json = {"urlShort": req.params.shortUrl, "date": new Date(),
                 "browser": req.query.browser, "ip": req.query.ip, "country": geo.country.toString(),
                 "city": geo.city.toString()};
-            console.log(json);
             //req.param is deprecated, cant use string to access information
             ddbbUri.click(req.params.shortUrl,json,function(err, result){
                 if (err != null && conf.log == true) console.error("Error: " + err);
