@@ -4,6 +4,7 @@ var ddbbUri = require('../models/shortUrlDB.js'),
     shortid = require('shortid'),
     qr = require('../lib/fancyqr.js'),
     http = require('http'),
+    https = require('https'),
     vCard = require('vcards-js'),
     urlencode = require('urlencode'),
     geoip = require ('geoip-lite');
@@ -79,7 +80,7 @@ module.exports = function(app, passport){
         if (conf.log === true) console.log("Input Conex: " + req);
         //Check user is authenticated
         if (req.user === undefined) return res.sendStatus(401);
-        checkUrl(req.body.urlsource);
+        console.log(checkUrl(req.body.urlsource));
         qr_(req, res);
     }),
     /*
@@ -226,20 +227,26 @@ function createQrLocal_(add, json, req, res){
 }
 
 function checkUrl(url){
-  console.log(url);
-  var peticion = "https://sb-ssl.google.com/safebrowsing/api/lookup?client=demo-app&key=AIzaSyBKHshf7mGT2-aV_0NH49S8PrIBIecE6hE&appver=1.5.2&pver=3.1&url="+url;
-  http.get(url, function(response){
-    console.log("Checking");
+  var peticion = "https://sb-ssl.google.com/safebrowsing/api/lookup?client=checkURLapp&key=AIzaSyBKHshf7mGT2-aV_0NH49S8PrIBIecE6hE&appver=1.5.4&pver=3.1&url="+url;
+  https.get(peticion, function(response){
      if (response.statusCode === 200){
-       console.log("Me respondio");
-       if(response.body === "ok" ){
-         return true;
-       }else{
-         return false;
-       }
+       //No es segura;
+       return {'status':response.statusCode};
+     }else if(response.statusCode === 204){
+       //Es segura;
+       return {'status':response.statusCode};
+     }else if(response.statusCode === 400){
+       //Url Mal formada
+       return {'status':response.statusCode};
+     }else if(response.statusCode === 503){
+       //Servicio no disponible
+       return {'status':response.statusCode};
+     }else if(response.statusCode === 401){
+       //Api key invalida
+       return {'status':response.statusCode};
      }else{
-       //Not checking
-       console.log("Fallo en peticion");
+       //Fallo en peticion
      }
+
    })
 }
