@@ -34,7 +34,7 @@ var http = require('http').Server(app),
 //Controller
 require('./controllers/base.js')(app, passport);
 require('./controllers/users.js')(app, passport);
-require('./controllers/statistics.js')(app);
+require('./controllers/statistics.js')(app,io);
 
 app.use(express.static(__dirname + '/public'));
 //Init server

@@ -81,6 +81,7 @@ module.exports = function(app, passport){
         if (conf.log === true) console.log("Input Conex: " + req);
         //Check user is authenticated
         if (req.user === undefined) return res.sendStatus(401);
+        if (req.user.rol !== "USER" && req.user.rol !== "ADMIN") return res.sendStatus(401);
         qr_(req, res);
     }),
     /*
@@ -151,7 +152,6 @@ function qr_(req, res){
         else {
             var vcard = createVcard(req.body.vcard, urlShortComplete);
             //Create qR
-            console.log("pepito")
             getQr(ext + urlencode(vcard.getFormattedString()), json, res);
         }
     }

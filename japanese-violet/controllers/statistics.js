@@ -6,7 +6,7 @@ var ddbbUri = require('../models/shortUrlDB.js'),
     cool = require('cool-ascii-faces');
 
 // File with statistics methods
-module.exports = function(app){
+module.exports = function(app,io){
 
     //getUrl statistics
     app.get(conf.api.uri + "/:shortUrl" + "+", function(req, res){
@@ -53,6 +53,17 @@ module.exports = function(app){
             queryStatistics(req,res);
         })
 
+        io.on('conection',function(socket){
+            console.log('New user');
+
+            socket.on('query',function(){
+                ddbbUri.findStats(function(err,result){
+                    if (err)throw err;
+                    socket.emit('stats', result.body)
+                })
+            });
+        })
+
 
 
 }
@@ -84,3 +95,14 @@ function queryStatistics(req,res){
         });
     }
 }
+
+function realTimeStats(req,res){
+
+    ddbbUri.findStats(function(err,result){
+        if (err) throw  err;
+        io.emit
+        res.send(result);
+    });
+
+}
+
