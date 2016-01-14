@@ -118,6 +118,12 @@ module.exports = {
             callback(err,res)
         })
     },
+    //Devuelve estadisticas (para websockets con que tengan el patron msg)
+    queryStats: function (msg,callback){
+        click.find({"urlShort": /msg/ },function(err,res){
+            callback(err,res)
+        })
+    },
     /****  USER SCHEMA  ****/
     //Añadir usuario
     addUser: function(add, callback){

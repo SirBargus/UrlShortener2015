@@ -55,12 +55,18 @@ module.exports = function(app,io){
 
         io.on('conection',function(socket){
             console.log('New user');
+            socket.emit ('connection');
 
-            socket.on('query',function(){
-                ddbbUri.findStats(function(err,result){
-                    if (err)throw err;
-                    socket.emit('stats', result.body)
-                })
+            socket.on('query',function(msg){
+                if(msg.body == "bye"){
+                    socket.emit('disconnect');
+                    socket.disconnect();
+                }else {
+                    ddbbUri.queryStats(msg.uri, function (err, result) {
+                        if (err)throw err;
+                        socket.emit('stats', result.body)
+                    })
+                }
             });
         })
 
