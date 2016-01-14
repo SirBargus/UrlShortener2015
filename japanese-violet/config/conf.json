@@ -13,6 +13,7 @@
         "uriUser": "/urlU",
         "login_local": "/login",
         "signup_local": "/signup",
+        "stats": "/statistics",
         "twitter": "/login/twitter",
         "twitter_callback": "/login/twitter/callback",
         "google": "/login/google",
