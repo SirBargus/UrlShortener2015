@@ -22,6 +22,9 @@
          ddbb.add({"user": "dummy", "urlSource": "1", "urlShort": "2", "statistics.total":0}, function(err, res){
              if (err) throw err;
          });
+         agent
+             .get(conf.api.uri + "/2" + "?ip=83.138.246.86&browser=Chrome")
+             .expect(302);
          ddbb.add({"user": "dummy2", "urlSource": "3", "urlShort": "4", "statistics.date":"Tue Dec 15 2015 03:04:05 GMT+0100 (CET)"}, function (err,res){
              if (err) throw err;
              else done();
@@ -30,12 +33,25 @@
 
      it('Check that the click count is generated to 0', function(done){
          this.timeout(30000);
-         request(app)
+         agent
              .get(conf.api.uriUser + "/dummy2")
              .expect(200)
              .end(function(err,res){
                  if(err) throw err;
-                 if((res.body[0].statistics.total == 0)) done();
+                 if(res.body[0].statistics.total == 0) {done();}
+                 else {throw err}
+             });
+     }),
+
+     it('Check that the click count increase', function(done) {
+         this.timeout(30000);
+         agent
+             .get(conf.api.uriUser + "/dummy2")
+             .expect(200)
+             .end(function(err,res){
+                 if(err) throw err;
+                 if(res.body[0].statistics.total == 0) {done();}
+                 else {throw err}
              });
      }),
 
@@ -43,7 +59,7 @@
          this.timeout(30000);
          agent
              .put(conf.api.uri)
-             .send({"urlSource":urlTest,"user":"dummy"})
+             .send({"urlSource":urlTest,"user":"dummy2"})
              .expect(200)
              .end(function (err1, res1){
                  console.log(res1.status);
@@ -61,21 +77,7 @@
 
      }),
 
-     it('Check that the click count increase', function(done){
-         this.timeout(30000);
-         request(app)
-             .get(conf.api.uri + "/2"+"?ip=83.138.246.86&browser=Chrome")
-             .end(function(a,b){
-             request(app)
-                 .get(conf.api.uriUser + "/dummy")
-                 .expect(200)
-                 .end(function(err1,res){
-                     if(err1) throw err;
-                     if(res.body[0].statistics.total == 1) done();
-                     else throw err;
-                 });
-         });
-     }),
+
 
 
 
