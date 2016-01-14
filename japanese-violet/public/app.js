@@ -8,8 +8,8 @@ var Busqueda = "";
 app.config(function($routeProvider){
 	$routeProvider
 		.when("/", {
-			templateUrl: views + "logIn.html",
-			controller: "LogInController"
+			templateUrl: views + "home.html",
+			controller: "HomeController"
 		})
 
         .when("/log", {
@@ -72,7 +72,47 @@ $location){
                     alert("Username o contraseña incorrecta");
                 });
         }
-    };
+    },
+
+    $scope.facebook = function(){
+        $http.post(addr + '/login/facebook',login)
+            .success(function (data) {
+                $cookies.put('username',login.username);
+                $window.location.reload();
+                $location.path("/");
+            })
+            .error(function (data){
+                alert("Username o contraseña incorrecta");
+            });
+
+    },
+
+
+    $scope.twitter = function(){
+        $http.post(addr + '/login/twitter',login)
+            .success(function (data) {
+                $cookies.put('username',login.username);
+                $window.location.reload();
+                $location.path("/");
+            })
+            .error(function (data){
+                alert("Username o contraseña incorrecta");
+            });
+
+    },
+
+    $scope.google = function(){
+        $http.post(addr + '/login/google',login)
+            .success(function (data) {
+                $cookies.put('username',login.username);
+                $window.location.reload();
+                $location.path("/");
+            })
+            .error(function (data){
+                alert("Username o contraseña incorrecta");
+            });
+
+    }
 
 }]);
 
@@ -83,11 +123,6 @@ app.controller("SignUpController", ['$scope','$window','$http', "$cookies", "$co
 
 	$scope.update = function(user){
         if (user.pass == user.repass){
-            if (user.male != null){
-                user.gender=true;
-            }else{
-                user.gender=false;
-            }
             $http.post(addr + "/signup", user)
                 .success(function (data){
                     $cookies.put('username',user.username);
