@@ -1,0 +1,43 @@
+<div>
+
+<!-- Three -->
+<section id="three" class="wrapper style3 special">
+    <div class="container">
+        <header class="major">
+            <h1>Registro de nuevo usuario</h1>
+        </header>
+    </div>
+
+    <div class="container 50%" >
+        <form role="form" name="form">
+            <div class="row uniform">
+
+                <div class="1u"></div>
+                <div class="10u 12u$(small) ">
+                    <input name="username" id="username" value="" placeholder="User *" type="text" ng-model="user.username" required>
+                </div>
+                <div class="1u$"></div>
+
+                <div class="1u"></div>
+                <div class="5u 12u$(small)">
+                    <input name="pass" id="pass" value="" placeholder="Contraseña *" type="password" ng-model="user.pass" required>
+                </div>
+                <div class="5u 12u$(small)">
+                    <input name="rePass" id="rePass" value="" placeholder="Repita la contraseña *" type="password" ng-model="user.repass" required>
+                </div>
+                <div class="12u$">
+                    <ul class="actions">
+                        <li><input value="Enviar" class="special big" type="submit" ng-disabled="form.$invalid || form.$pending" ng-click="update(user)"></li>
+                        <li><input value="Reset" class="special_red big" type="reset"></li>
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <span ng-show="form.email.$error && form.email.$dirty"><h4>Introduce un email con la forma user@adress.</h4></span>
+    <span ng-show="form.$invalid || form.$pending"><h4>Los campos marcados con * son obligatorios</h4></span>
+    <p>¿Ya tienes una cuenta? <a href="#/log"> <u>Inicia sesión</u></a></p>
+
+</section>
+</div>

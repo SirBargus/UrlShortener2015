@@ -1,0 +1,57 @@
+<section id="one" class="wrapper style1 special">
+    <div class="container">
+        <header class="major">
+            <p>Uris Stats</p>
+        </header>
+        <div class="row 150%">
+
+            <div class="6u 12u$(medium)">
+
+                <form class="input-group">
+
+                    <input type="text" class="form-control" placeholder="Busque aqui un producto" name="srch-term1" id="srch-term1" ng-model="busqueda1">
+					<span class="input-group-btn">
+						<button  style="padding:8px 12px" type="submit" class="btn btn-default" ng-click="Buscar1()">
+                            <span class="glyphicon glyphicon-search lupa"></span>
+                        </button>
+					</span>
+                </form>
+                <!--<a href="/prod">-->
+                    <section ng-hide="noSearch1" class="box">
+                        <img class="img-responsive" src="{{result1.imagen}}"/>
+                        <h3>{{result1.name}}</h3>
+                        <h4>{{result1.subtitulo}}</h4>
+                        <h4>{{result1.precio | currency}}</h4>
+                        <h4>{{result1.valoracion}}</h4>
+                        <p>{{result1.descripcion}}</p>
+                        <button class="button" ng-hide="notLogged()" ng-controller="CestaController" ng-click="add(p)">Añadir a la cesta</button>
+                    </section>
+                <!--</a>-->
+            </div>
+            <div class="6u 12u$(medium)">
+                <form class="input-group">
+                    <input type="text" class="form-control" placeholder="Busque aqui otro producto" name="srch-term2" id="srch-term2" ng-model="busqueda2">
+					<span class="input-group-btn caja-lupa">
+						<button style="padding:8px 12px" type="submit" class="btn btn-default boton-lupa" ng-click="Buscar2()">
+                            <span class="glyphicon glyphicon-search lupa"></span>
+                        </button>
+					</span>
+                </form>
+                <!--<a href="/prod">-->
+                <section ng-hide="noSearch2" class="box">
+                    <img class="img-responsive" src="{{result2.imagen}}"/>
+                    <h3>{{result2.name}}</h3>
+                    <h4>{{result2.subtitulo}}</h4>
+                    <h4>{{result2.precio | currency}}</h4>
+                    <h4>{{result2.valoracion}}</h4>
+                    <p>{{result2.descripcion}}</p>
+                    <button class="button" ng-hide="notLogged()" ng-controller="CestaController" ng-click="add(p)">Añadir a la cesta</button>
+                </section>
+                <!--</a>-->
+            </div>
+        </div>
+    </div>
+
+</section>
+
+

@@ -11,7 +11,7 @@ module.exports = function(app, passport){
     app.post(conf.api.signup_local, passport.authenticate('local-signup', {
 		successRedirect : '/', // redirect to the secure profile section
 		failureRedirect : '/signup'
-	}));
+    }));
 
     /*
      * Process login with passport-local
