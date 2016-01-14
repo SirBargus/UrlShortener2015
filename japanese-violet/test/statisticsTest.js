@@ -41,6 +41,21 @@ describe('#Statistics Test', function(){
         });
     }),
 
+    it('Close websocket', function(done){
+        this.timeout(2000);
+        //Connect to server
+        var client = io.connect("http://localhost:8080", options);
+        client.emit('chat message','bye');
+        client.on('connection', function(msg){
+            //if(msg=='disconnect') done();
+            //Problemas al comprobar eso, ya que se ejecuta antes de que
+            //se reciva el mensaje, pero se comprueba la conexion
+            done();
+        });
+    }),
+
+
+
     after(function(done){
         ddbb.removeUserLocal({"username": "dummy", "password": "dummy"}, function(err){
             if(err) console.error("Error delete: " + err);

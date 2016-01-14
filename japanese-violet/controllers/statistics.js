@@ -53,12 +53,12 @@ module.exports = function(app,io){
             queryStatistics(req,res);
         })
 
-        io.on('connection',function(socket){
+        io.on('connection',function(socket,req){
             socket.emit ('connection');
-
-            socket.on('query',function(msg){
-                if(msg.body == "bye"){
-                    socket.emit('disconnect');
+            //take the query and process it
+            socket.on('chat message',function(msg){
+                if(msg == "bye"){
+                    socket.emit('chat message','disconnect');
                     socket.disconnect();
                 }else {
                     ddbbUri.queryStats(msg.uri, function (err, result) {
