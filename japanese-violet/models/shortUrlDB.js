@@ -130,9 +130,7 @@ module.exports = {
       uri.findOne({"urlSource": url}, function(err, uri){
         uri.secure = status;
         uri.error = code;
-        uri.save(function(err){
-            err(callback, newClick)
-        });
+        uri.save();
         callback(err,uri);
       });
     },
