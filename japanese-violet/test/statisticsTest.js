@@ -25,7 +25,7 @@ describe('#Statistics Test', function(){
             .send({"urlSource":urlTest,"statistics":{"ip":"83.138.246.86"}})
             .end(function(err, res) {
                 if(err) throw err;
-                done();
+                if (res.body.statistics.ip=="undefined") done();
             });
         }),
 
