@@ -2,11 +2,12 @@ var conf = require('../config/conf'),
     request = require('supertest'),
     express = require('express'),
     app = require('../app'),
+    io = require('socket.io-client')
     ddbb = require('../models/shortUrlDB.js'),
     should = require('should');
 
 var urlTest = "http://google.es";
-var json = "";
+var options = {traansports:['websocket'],'force new connection': true};
 var agent = request.agent(app);
 //var agent2 = request.agent(app);
 //Statistics test
@@ -28,6 +29,17 @@ describe('#Statistics Test', function(){
                 if (res.body.statistics.ip=="undefined") done();
             });
         }),
+
+    it('Open websocket', function(done){
+        this.timeout(2000);
+        //Connect to server
+        var client = io.connect("http://localhost:8080", options);
+        var i = 0;
+        client.on('connection', function(msg){
+            i++;
+            if (i == 1) done();
+        });
+    }),
 
     after(function(done){
         ddbb.removeUserLocal({"username": "dummy", "password": "dummy"}, function(err){

@@ -53,8 +53,7 @@ module.exports = function(app,io){
             queryStatistics(req,res);
         })
 
-        io.on('conection',function(socket){
-            console.log('New user');
+        io.on('connection',function(socket){
             socket.emit ('connection');
 
             socket.on('query',function(msg){
@@ -102,13 +101,4 @@ function queryStatistics(req,res){
     }
 }
 
-function realTimeStats(req,res){
-
-    ddbbUri.findStats(function(err,result){
-        if (err) throw  err;
-        io.emit
-        res.send(result);
-    });
-
-}
 
