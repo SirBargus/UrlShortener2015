@@ -232,28 +232,32 @@ function checkUrl(url){
   https.get(peticion, function(response){
      if (response.statusCode === 200){
        //No es segura;
-       ddbbUri.checkUrl(url,false,response.body);
-       return false;
+       ddbbUri.checkUrl(url,false,response.body,function(err, result){
+         return resuelt;
+       });
      }else if(response.statusCode === 204){
        //Es segura;
        ddbbUri.checkUrl(url,true,"");
        return  true;
      }else if(response.statusCode === 400){
-       ddbbUri.checkUrl(url,false,"Bad");
        //Url Mal formada
-       return false;
+       ddbbUri.checkUrl(url,false,"Bad",function(err, result){
+         return result;
+       });
      }else if(response.statusCode === 503){
-       ddbbUri.checkUrl(url,false,"Error");
        //Servicio no disponible
-       return false;
+       ddbbUri.checkUrl(url,false,"Error",function(err, result){
+         return result;
+       });
      }else if(response.statusCode === 401){
-       ddbbUri.checkUrl(url,false,"Error");
        //Api key invalida
-       return false;
+       ddbbUri.checkUrl(url,false,"Error",function(err, result){
+         return result;
+       });
      }else{
        //Fallo en peticion
        return false;
      }
 
-   })
+   });
 }

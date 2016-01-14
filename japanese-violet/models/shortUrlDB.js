@@ -127,7 +127,14 @@ module.exports = {
     },
 
     checkUrl: function(url, status, code, callback){
-      uri.update({"urlSource": url}, {$set: {"secure": status, "error" :code}}, callback);   
+      uri.findOne({"urlSource": url}, function(err, uri){
+        uri.secure = status;
+        uri.error = code;
+        uri.save(function(err){
+            err(callback, newClick)
+        });
+        callback(err,uri);
+      });
     },
 
     isSecure: function(urls, callback){
