@@ -20,16 +20,6 @@ app.config(function($routeProvider){
             templateUrl: views + "signUp.html",
             controller: "SignUpController"
         })
-
-        .when("/perfil", {
-            templateUrl: views + "perfil.html",
-            controller: "PerfilController"
-        })
-
-        .when("/comparar", {
-            templateUrl: views + "comparar.html",
-            controller: "CompararController"
-        });
 });
 
 app.controller("IndexController", ['$scope','$route',"$cookies", '$cookieStore','$location', function($scope,$route, $cookies,$cookieStore,$location){
@@ -47,12 +37,6 @@ app.controller("IndexController", ['$scope','$route',"$cookies", '$cookieStore',
     $scope.logOut = function(){
 		$cookies.remove("username");
 		$scope.user.username= undefined;
-	};
-
-	$scope.Buscar= function(){
-	    Busqueda = $scope.busqueda;
-	    $location.path("/buscar");
-	    console.log(Busqueda);
 	};
 }]);
 
@@ -138,24 +122,7 @@ app.controller("SignUpController", ['$scope','$window','$http', "$cookies", "$co
     };
 }]);
 
-app.controller("PerfilController",['$scope','$http', '$cookies',function($scope, $http, $cookies){
-	var send = {username: $cookies.get('username')};
-	$scope.info = {};
-
-	//Receive data comments
-	$http.post(addr + "/datos", send)
-		.success(function(data){
-		$scope.info = data;
-		    if(data.gender){
-		        $scope.info.gender="Male";
-		    }else{
-		        $scope.info.gender="Female";
-		    }
-
-    });
-}]);
-
-app.controller("CompararController", ['$scope', "$cookies", '$cookieStore', '$http', function($scope, $cookies, $cookieStore, $http){
+app.controller("HomeController", ['$scope', "$cookies", '$cookieStore', '$http', function($scope, $cookies, $cookieStore, $http){
 
     $scope.product1 = {};
     $scope.product2 = {};
