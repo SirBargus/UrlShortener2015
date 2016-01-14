@@ -98,6 +98,26 @@ module.exports = {
             callback(err, res);
         });
     },
+    findStats: function (callback){
+        click.find({},function(err,res){
+            callback(err,res)
+        })
+    },
+    findStatsBefore: function (time,callback){
+        click.find({"date":{$lt: time}},function(err,res){
+            callback(err,res)
+        })
+    },
+    findStatsAfter: function (time,callback){
+        click.find({"date":{$gte:time}},function(err,res){
+            callback(err,res)
+        })
+    },
+    findStatsBetween: function (time1,time2,callback){
+        click.find({"date":{$lt:time1,$gte:time2}},function(err,res){
+            callback(err,res)
+        })
+    },
     /****  USER SCHEMA  ****/
     //Añadir usuario
     addUser: function(add, callback){

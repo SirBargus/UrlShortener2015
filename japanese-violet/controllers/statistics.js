@@ -61,12 +61,26 @@ var htmlHeader = "<html><title>HTML</title><body>";
 var htmlEnd = "</body></html>";
 
 function queryStatistics(req,res){
-    if (req.body.todo != null){
-        ddbbUri.findByUser("",function(err,result){
+    if (req.body.all != null){
+        ddbbUri.findStats(function(err,result){
+            if (err) throw  err;
             res.send(result);
         });
     }
-    else if (req.body){
-
+    else if (req.body.before != null){
+        ddbbUri.findStatsBefore(function(err,result){
+            if (err) throw  err;
+            res.send(result);
+        });
+    }else if (req.body.after != null){
+        ddbbUri.findStatsAfter(function(err,result){
+            if (err) throw  err;
+            res.send(result);
+        });
+    }else if (req.body.both != null){
+        ddbbUri.findStatsBetween(function(err,result){
+            if (err) throw  err;
+            res.send(result);
+        });
     }
 }
