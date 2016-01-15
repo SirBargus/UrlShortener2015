@@ -124,37 +124,8 @@ app.controller("SignUpController", ['$scope','$window','$http', "$cookies", "$co
 
 app.controller("HomeController", ['$scope', "$cookies", '$cookieStore', '$http', function($scope, $cookies, $cookieStore, $http){
 
-    $scope.product1 = {};
-    $scope.product2 = {};
-    $scope.noSearch1 = true;
-    $scope.noSearch2 = true;
-
-    $scope.Buscar1 = function() {
-        $scope.product1.id = $scope.busqueda1;
-        console.log($scope.product1);
-        $http.post(addr + '/comparar', $scope.product1)
-        .success(function(data){
-            console.log(data);
-            $scope.noSearch1 = false;
-            $scope.result1 = data;
-        })
-        .error(function(data){
-            alert("El producto no pudo encontrarse");
-        })
-    };
-
-    $scope.Buscar2 = function() {
-        $scope.product2.id = $scope.busqueda2;
-        console.log($scope.product2);
-        $http.post(addr + '/comparar', $scope.product2)
-        .success(function(data){
-            console.log(data);
-            $scope.noSearch2 = false;
-            $scope.result2 = data;
-        })
-        .error(function(data){
-            alert("El producto no pudo encontrarse");
-        })
-    };
+    $http.post(addr + '/stats', $scope.query).success(function(data){
+        $scope.result = data;
+    });
 
 }]);
