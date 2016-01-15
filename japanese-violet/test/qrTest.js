@@ -10,7 +10,7 @@ var conf = require('../config/conf'),
     vcardparse = require('vcardparser'),
     http = require('http');
 
-var urlTest = "http://www.nyan.cat";
+var urlTest = "http://www.20minutos.es/";
 var json = '';
 var jsonVcard = {"vcard": {"firstName": "dummy","middleName": "dummy","lastName": "dummy",
     "organization": "dummy","photo": "https://pbs.twimg.com/profile_images/1620149654/avatar.jpg",

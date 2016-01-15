@@ -2,7 +2,7 @@
   "name": "URLshortener2015",
   "main": "app.js",
   "version": "0.0.1",
-  "author": "Agustin Navarro Torres (@SirBargus), Aron Collados Torres, Alejandro Bonilla",
+  "author": "Agustin Navarro Torres (@SirBargus), Aron Collados Torres, Alejandro Bonilla(@Naxsel)",
   "repository": {
     "type": "git",
     "url": "git://github.com/SirBargus/UrlShortener2015.git"
@@ -11,6 +11,9 @@
     "node": "0.10.x"
   },
   "dependencies": {
+    "angular": "latest",
+    "angular-cookies": "latest",
+    "angular-ui-router": "latest",
     "body-parser": "1.14.1",
     "canvas": "1.3.2",
     "cool-ascii-faces": "1.3.*",

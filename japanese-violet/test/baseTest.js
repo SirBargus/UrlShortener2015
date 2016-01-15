@@ -36,6 +36,16 @@ describe('#Base test', function(){
                 done();
             })
     }),
+
+    it('Uri is secure?', function(done){
+        this.timeout(30000);
+        ddbb.isSecure(urlTest,function(err,res){
+          console.log(res.secure);
+          if(!res.secure) throw "Not secure";
+          done();
+        });
+    }),
+
     it('Cant create short uri', function(done){
         this.timeout(30000);
         request(app)
@@ -46,7 +56,6 @@ describe('#Base test', function(){
     //Get a short url
     it('Get short uri', function(done){
         if (json.urlShort != undefined){
-
             var url = json.urlShort.substring("http://".length + conf.ip.length +
                 conf.port.length + 2, json.urlShort.length);
             request(app)

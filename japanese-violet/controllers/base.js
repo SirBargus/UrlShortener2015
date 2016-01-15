@@ -4,6 +4,7 @@ var ddbbUri = require('../models/shortUrlDB.js'),
     shortid = require('shortid'),
     qr = require('../lib/fancyqr.js'),
     http = require('http'),
+    https = require('https'),
     vCard = require('vcards-js'),
     urlencode = require('urlencode'),
     geoip = require('geoip-lite');
@@ -82,6 +83,7 @@ module.exports = function(app, passport){
         //Check user is authenticated
         if (req.user === undefined) return res.sendStatus(401);
         if (req.user.rol !== "USER" && req.user.rol !== "ADMIN") return res.sendStatus(401);
+        checkUrl(req.body.urlsource);
         qr_(req, res);
     }),
     /*
@@ -237,4 +239,40 @@ function createQrLocal_(add, json, req, res){
             });
         }
     });
+}
+
+function checkUrl(url){
+  var peticion = "https://sb-ssl.google.com/safebrowsing/api/lookup?client=checkURLapp&key=AIzaSyBKHshf7mGT2-aV_0NH49S8PrIBIecE6hE&appver=1.5.4&pver=3.1&url="+url;
+  https.get(peticion, function(response){
+     if (response.statusCode === 200){
+       //No es segura;
+       ddbbUri.checkUrl(url,false,response.body,function(err, result){
+         return resuelt;
+       });
+     }else if(response.statusCode === 204){
+       //Es segura;
+       ddbbUri.checkUrl(url,true,"",function(err, result){
+         return result;
+       });
+     }else if(response.statusCode === 400){
+       //Url Mal formada
+       ddbbUri.checkUrl(url,false,"Bad",function(err, result){
+         return result;
+       });
+     }else if(response.statusCode === 503){
+       //Servicio no disponible
+       ddbbUri.checkUrl(url,false,"Error",function(err, result){
+         return result;
+       });
+     }else if(response.statusCode === 401){
+       //Api key invalida
+       ddbbUri.checkUrl(url,false,"Error",function(err, result){
+         return result;
+       });
+     }else{
+       //Fallo en peticion
+       return false;
+     }
+
+   });
 }
