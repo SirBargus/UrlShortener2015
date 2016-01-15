@@ -7,6 +7,28 @@
         <header class="major">
             <p>Uris Stats</p>
         </header>
+        <div class="row 150%">
+        <div class="6u 12u$(medium)">
+            <form class="input-group">
+                <input type="text" class="form-control" placeholder="Desde" name="srch-term1" id="srch-term1" ng-model="busqueda1">
+					<span class="input-group-btn">
+						<button  style="padding:8px 12px" type="submit" class="btn btn-default" ng-click="Buscar1()">
+                            <span class="glyphicon glyphicon-search lupa"></span>
+                        </button>
+					</span>
+            </form>
+        </div>
+        <div class="6u 12u$(medium)">
+            <form class="input-group">
+                <input type="text" class="form-control" placeholder="Hasta" name="srch-term2" id="srch-term2" ng-model="busqueda2">
+					<span class="input-group-btn caja-lupa">
+						<button style="padding:8px 12px" type="submit" class="btn btn-default boton-lupa" ng-click="Buscar2()">
+                            <span class="glyphicon glyphicon-search lupa"></span>
+                        </button>
+					</span>
+            </form>
+        </div>
+            </div>
         <div class="panel-body">
             <div class="dataTable_wrapper">
                 <table class="table table-striped table-bordered table-hover" id="dataTables-example">
