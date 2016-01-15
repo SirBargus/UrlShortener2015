@@ -149,5 +149,15 @@ module.exports = {
         user.findById(id, function(err, user) {
             callback(err, user);
         });
+    },
+    editUser: function(oldUser,newUser,callback){
+        user.findOne({"username": oldUser},function(err,data){
+            if(err) throw err
+            user = newUser;
+            user.save(function(err){
+                if (err) throw err;
+                callback(err,user);
+            })
+        })
     }
 };

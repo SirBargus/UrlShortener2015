@@ -11,6 +11,7 @@
         "qr": "/qr",
         "createUser": "/createuser",
         "uriUser": "/urlU",
+        "editUser": "/editUser",
         "login_local": "/login",
         "signup_local": "/signup",
         "stats": "/statistics",
