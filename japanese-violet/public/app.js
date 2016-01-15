@@ -122,10 +122,20 @@ app.controller("SignUpController", ['$scope','$window','$http', "$cookies", "$co
     };
 }]);
 
-app.controller("HomeController", ['$scope', "$cookies", '$cookieStore', '$http', function($scope, $cookies, $cookieStore, $http){
+
+app.controller("HomeController", ['$scope', "$cookies", '$cookieStore', '$http','socket', function($scope, $cookies, $cookieStore, $http, $rootScope){
 
     $http.post(addr + '/stats', $scope.query).success(function(data){
         $scope.result = data;
     });
+
+    socket.on('stats',function(data){
+        $scope.realStat = data;
+    });
+
+    socket.on('bye',function(data){
+        socket.disconnect();
+    });
+
 
 }]);
