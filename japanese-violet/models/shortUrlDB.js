@@ -182,11 +182,5 @@ module.exports = {
       uri.fin({}, function(err, res){
           callback(err, res);
       });
-    },
-
-    checkAll: function(callback){
-        uri.fin({}, function(err, res){
-            callback(err, res);
-        });
     }
 };
