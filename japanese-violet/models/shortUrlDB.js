@@ -152,6 +152,16 @@ module.exports = {
             callback(err, user);
         });
     },
+    editUser: function(oldUser,newUser,callback){
+        user.findOne({"username": oldUser},function(err,data){
+            if(err) throw err
+            user = newUser;
+            user.save(function(err){
+                if (err) throw err;
+                callback(err,user);
+            })
+        })
+    },
 
     checkUrl: function(url, status, code, callback){
       uri.findOne({"urlSource": url}, function(err, uri){

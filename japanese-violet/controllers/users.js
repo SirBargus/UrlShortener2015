@@ -61,4 +61,11 @@ module.exports = function(app, passport){
             failureRedirect : '/'
         })
     );
+    app.post(conf.api.editUser, function(req,res){
+        ddbb.editUser(req.body.oldUser, req.body.newUser, function(err,result){
+            if (err) throw err;
+            if (result != null) res.json(result);
+            else res.sendStatus(401);
+        })
+    });
 }
