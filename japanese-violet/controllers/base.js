@@ -31,7 +31,11 @@ module.exports = function(app, passport){
             ddbbUri.click(req.params.shortUrl,json,function(err, result){
                 if (err != null && conf.log == true) console.error("Error: " + err);
                 if (err == null && result != null){
-                    res.redirect(result.urlSource);
+                    ddbbUri.isSecure(req.params.shortUrl,function(err,res){
+                        if(res.secure != undefined) res.redirect(result.urlSource);
+                        if(!res.secure) res.sendStatus(402);
+                        else res.redirect(result.urlSource);
+                    });
                 }
                 else res.sendStatus(401);
             });
