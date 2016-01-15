@@ -7,7 +7,7 @@ var ddbbUri = require('../models/shortUrlDB.js'),
     https = require('https'),
     vCard = require('vcards-js'),
     urlencode = require('urlencode'),
-    geoip = require('geoip-lite');
+    geoip = require ('geoip-lite');
 
 // File with only server's methods
 module.exports = function(app, passport){
@@ -22,23 +22,25 @@ module.exports = function(app, passport){
     app.get(conf.api.uri + "/:shortUrl", function(req, res){
         if (conf.log == true) console.log("Input Conex: " + req);
         //geoip is synchronous
-        var geo = geoip.lookup(req.query.ip);
-        if (geo != null){
+        console.log("Entrando a URI");
+        var geo = geoip.lookup(req.body.ip,function(){
+            console.log();
             var json = {"urlShort": req.params.shortUrl, "date": new Date(),
-                "browser": req.query.browser, "ip": req.query.ip, "country": geo.country.toString(),
-                "city": geo.city.toString()};
+                "browser": req.body.browser, "ip": req.body.ip, "country": geo.country,
+                "city": geo.city};
             //req.param is deprecated, cant use string to access information
             ddbbUri.click(req.params.shortUrl,json,function(err, result){
                 if (err != null && conf.log == true) console.error("Error: " + err);
                 if (err == null && result != null){
-                    res.redirect(result.urlSource);
+                  ddbbUri.isSecure(req.params.shortUrl,function(err,res){
+                    if(res.secure != undefined) res.redirect(result.urlSource);
+                    if(!res.secure) res.sendStatus(402);
+                    else res.redirect(result.urlSource);
+                  });
                 }
                 else res.sendStatus(401);
             });
-        }else{
-            res.sendStatus(401);
-        }
-
+        });
     }),
     /*
      * Get all uris create by an User
@@ -82,9 +84,9 @@ module.exports = function(app, passport){
         if (conf.log === true) console.log("Input Conex: " + req);
         //Check user is authenticated
         if (req.user === undefined) return res.sendStatus(401);
-        if (req.user.rol !== "USER" && req.user.rol !== "ADMIN") return res.sendStatus(401);
         checkUrl(req.body.urlsource);
         qr_(req, res);
+
     }),
     /*
      * Get the shorturi and return a qr
@@ -127,22 +129,10 @@ function qr_(req, res){
     //Level of error
     if (req.body.err === true) ext = conf.exter.qrErr + req.body.errLevel + "&chl=";
     else ext = conf.extern.qr;
-    var geo = geoip.lookup(req.body.ip);
-    if (geo == null){
-        req.body.ip="undefined";
-        req.body.country="undefined";
-        req.body.city="undefined";
-    }else{
-        req.body.country = geo.country;
-        req.body.city = geo.city;
-    }
-    if (req.body.browser == null){
-        req.body.browser = "undefined";
-    }
+
     var shortUrl_ = shortid.generate();
     var urlShortComplete = "http://" + conf.ip + ":" + conf.port + conf.api.uri + "/" + shortUrl_;
-    var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_,"statistics":{"date":new Date(),
-        "ip":req.body.ip, "country":req.body.country, "city":req.body.city, "browser":req.body.browser}};
+    var json = {"urlSource": req.body.urlsource, "urlShort": shortUrl_, "user": req.user.id_};
     if (req.body.local === "true"){
         if (req.body.vcard === undefined) createQrLocal_(urlShortComplete, json, req, res);
         else{
@@ -275,4 +265,12 @@ function checkUrl(url){
      }
 
    });
+}
+
+function _checkUrl(){
+  ddbbUri.checkAll(function(err,result){
+    for(var url in result){
+      checkUrl(result.urlSource);
+    }
+  });
 }

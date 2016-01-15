@@ -163,7 +163,13 @@ module.exports = {
     },
 
     isSecure: function(urls, callback){
-      uri.findOne({"urlSource": urls}, function(err, res){
+      uri.findOne({"urlShort": urls}, function(err, res){
+          callback(err, res);
+      });
+    },
+
+    checkAll: function(callback){
+      uri.fin({}, function(err, res){
           callback(err, res);
       });
     }
