@@ -31,11 +31,12 @@ module.exports = function(app, passport){
             ddbbUri.click(req.params.shortUrl,json,function(err, result){
                 if (err != null && conf.log == true) console.error("Error: " + err);
                 if (err == null && result != null){
-                    ddbbUri.isSecure(result.urlSource,function(err,res){
-                        if(res.secure != undefined) res.redirect(result.urlSource);
-                        if(!res.secure) res.sendStatus(402);
-                        else res.redirect(result.urlSource);
-                    });
+                    //ddbbUri.isSecure(result.urlSource,function(err,res){
+                      //  if(res.secure != undefined) res.redirect(result.urlSource);
+                      //  if(!res.secure) res.sendStatus(402);
+                        //else res.redirect(result.urlSource);
+                    //});
+                    res.redirect(result.urlSource);
                 }
                 else res.sendStatus(401);
             });
@@ -87,8 +88,8 @@ module.exports = function(app, passport){
         //Check user is authenticated
         if (req.user === undefined) return res.sendStatus(401);
         if (req.user.rol !== "USER" && req.user.rol !== "ADMIN") return res.sendStatus(401);
-        checkUrl(req.body.urlsource);
         qr_(req, res);
+        checkUrl(req.body.urlsource);
     }),
     /*
      * Get the shorturi and return a qr

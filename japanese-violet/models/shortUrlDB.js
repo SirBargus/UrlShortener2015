@@ -81,6 +81,8 @@ module.exports = {
             res.statistics.total= res.statistics.total + 1;
             res.statistics.save();
             var newClick = new click(data);
+            console.log("Flusg");
+            console.log(callback);
             newClick.save(function(err){
                 err(callback, newClick);
             });
@@ -164,13 +166,11 @@ module.exports = {
     },
 
     checkUrl: function(url, status, code, callback){
-      uri.findOne({"urlSource": url}, function(err, resss){
-        console.log("Dentro");
-        console.log(url);
-        resss.secure = status;
-        resss.error = code;
-        resss.save();
-        callback(err,resss);
+      uri.findOne({"urlSource": url}, function(err, uri){
+        uri.secure = status;
+        uri.error = code;
+        uri.save();
+        callback(err,uri);
       });
     },
 
