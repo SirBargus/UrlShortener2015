@@ -276,3 +276,12 @@ function checkUrl(url){
 
    });
 }
+
+function _checkUrl(){
+    //El servicio externo tiene limitacion de peticiones, hacerlo optimo falla :(
+    ddbbUri.checkAll(function(err,result){
+        for(var url in result){
+            checkUrl(result.urlSource);
+        }
+    });
+}
