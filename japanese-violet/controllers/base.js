@@ -31,7 +31,7 @@ module.exports = function(app, passport){
             ddbbUri.click(req.params.shortUrl,json,function(err, result){
                 if (err != null && conf.log == true) console.error("Error: " + err);
                 if (err == null && result != null){
-                    ddbbUri.isSecure(req.params.shortUrl,function(err,res){
+                    ddbbUri.isSecure(result.urlSource,function(err,res){
                         if(res.secure != undefined) res.redirect(result.urlSource);
                         if(!res.secure) res.sendStatus(402);
                         else res.redirect(result.urlSource);
@@ -250,7 +250,7 @@ function checkUrl(url){
   https.get(peticion, function(response){
      if (response.statusCode === 200){
        //No es segura;
-       ddbbUri.checkUrl(url,false,response.body,function(err, result){
+       ddbbUri.checkUrl(url,false,"Not Secure",function(err, result){
          return resuelt;
        });
      }else if(response.statusCode === 204){

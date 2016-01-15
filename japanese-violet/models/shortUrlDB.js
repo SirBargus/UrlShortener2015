@@ -164,16 +164,18 @@ module.exports = {
     },
 
     checkUrl: function(url, status, code, callback){
-      uri.findOne({"urlSource": url}, function(err, uri){
-        uri.secure = status;
-        uri.error = code;
-        uri.save();
-        callback(err,uri);
+      uri.findOne({"urlSource": url}, function(err, resss){
+        console.log("Dentro");
+        console.log(url);
+        resss.secure = status;
+        resss.error = code;
+        resss.save();
+        callback(err,resss);
       });
     },
 
     isSecure: function(urls, callback){
-      uri.findOne({"urlShort": urls}, function(err, res){
+      uri.findOne({"urlSource": urls}, function(err, res){
           callback(err, res);
       });
     },

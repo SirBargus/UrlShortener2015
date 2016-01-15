@@ -40,7 +40,6 @@ describe('#Base test', function(){
     it('Uri is secure?', function(done){
         this.timeout(30000);
         ddbb.isSecure(urlTest,function(err,res){
-          console.log(res.secure);
           if(!res.secure) throw "Not secure";
           done();
         });
