@@ -237,8 +237,9 @@ function checkUrl(url){
        });
      }else if(response.statusCode === 204){
        //Es segura;
-       ddbbUri.checkUrl(url,true,"");
-       return  true;
+       ddbbUri.checkUrl(url,true,"",function(err, result){
+         return result;
+       });
      }else if(response.statusCode === 400){
        //Url Mal formada
        ddbbUri.checkUrl(url,false,"Bad",function(err, result){

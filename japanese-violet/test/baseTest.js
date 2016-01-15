@@ -37,10 +37,10 @@ describe('#Base test', function(){
             })
     }),
 
-    //it('Uri is secure?', function(done){
-      //  this.timeout(30000);
-      //  if(!ddbb.isSecure(urlTest).secure) throw "Not secure";
-  //  }),
+    it('Uri is secure?', function(done){
+        this.timeout(30000);
+        if(!ddbb.isSecure(urlTest).secure) throw "Not secure";
+    }),
 
     it('Cant create short uri', function(done){
         this.timeout(30000);
